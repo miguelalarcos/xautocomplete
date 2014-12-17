@@ -1,0 +1,14 @@
+
+.xpopover {
+    position: absolute;
+    z-index: 2;
+    cursor: pointer;
+}
+.xselected{
+    background-color: #58FAF4;
+    font-weight: bold;
+}
+
+.xclose{
+    cursor: pointer;
+}

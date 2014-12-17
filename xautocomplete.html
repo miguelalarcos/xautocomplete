@@ -1,0 +1,17 @@
+<template name='xautocomplete'>
+    <div class="xwidget xautocomplete ui input" tabindex=100>
+        {{init}}
+        <input type='text' class="xautocomplete-input" value="{{value}}">
+        <div class=xpopover tabindex=100>
+            <table class="ui table">
+            {{#each items}}
+                <tr index={{this.index}} class="xitem {{this.selected}}">{{{this.content}}}</tr>
+            {{/each}}
+            </table>
+        </div>
+        <br>
+        {{#each array}}
+            <span class="ui label">{{this.value}} <i value="{{this.value}}" class="delete icon xclose"></i></span>
+        {{/each}}
+    </div>
+</template>
