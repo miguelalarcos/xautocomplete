@@ -2,13 +2,11 @@
 Session.set 'query', null
 # we are going to keep the items to show in the popover as the user is writing in the autocomplete input
 items = new Meteor.Collection null
-# if the autocomplete input is an array, we keep the values of the array in array
-#array = new Meteor.Collection null
 # in data we keep the values of the all autocomplete inputs
 data = new Meteor.Collection null
 # index is the index in the popover where the user click
 index = -1
-# the path of the current autocomplete input
+# the path of the current autocomplete input where the user is typing
 current_input = null
 
 # each autocomplete input is identified by the formId and name
@@ -23,6 +21,8 @@ Template.xautocomplete.helpers
     if _.isArray(this.value)
       for value in this.value
         data.insert({path: path_, value:value})
+    else if _.has(this.value, '_id')
+      data.insert({path: path_, value: window[this.valueFunction](this.value), remote_id: this.value._id})
     else
       data.insert({path: path_, value: this.value})
     null
@@ -72,9 +72,9 @@ Template.xautocomplete.events
     selected = items.findOne({selected: 'xselected'})
     if t.data.array == 'true'
       if not data.findOne({path: path_, value: selected.value})
-        data.insert({path: path_, value: selected.value})
+        data.insert({path: path_, value: selected.value, remote_id: selected.remote_id})
     else
-      data.update({path: path_}, {$set: {value: this.value}})
+      data.update({path: path_}, {$set: {value: selected.value, remote_id: selected.remote_id}})
 
     items.remove({})
     Session.set 'query',''
@@ -91,29 +91,45 @@ Template.xautocomplete.events
       if index == count then index = 0 else index += 1
       items.update({index:index}, {$set:{selected: 'xselected'}})
     else if e.keyCode in [13, 39]
-      selected = items.findOne selected: 'xselected'
-      path_ = path(this.formId, this.name)
-      if t.data.array == 'true'
-        if not data.findOne({path: path_, value: selected.value})
-          data.insert({path: path_, value: selected.value})
-      else
-        data.update({path: path_}, {$set: {value: selected.value}})
+      selected = items.findOne({selected: 'xselected'}) or items.findOne({index: 0})
+      if selected
+        path_ = path(this.formId, this.name)
+        if t.data.array == 'true'
+          if not data.findOne({path: path_, value: selected.value})
+            data.insert({path: path_, value: selected.value, remote_id: selected.remote_id})
+        else
+          data.update({path: path_}, {$set: {value: selected.value, remote_id: selected.remote_id}})
 
-      # close popover
-      items.remove({})
-      Session.set('query','')
-      index = -1
+        # close popover
+        items.remove({})
+        Session.set('query','')
+        index = -1
     else if e.keyCode == 27
       items.remove({})
       Session.set('query','')
       index = -1
     else
-      Session.set 'query', $(e.target).val()
-      current_input = path(t.data.formId, t.data.name)
+      val = $(e.target).val()
+      path_ = path(t.data.formId, t.data.name)
+      Session.set 'query', val
+      current_input = path_
+
+      if not t.data.array
+        item = items.findOne(value: val)
+        if item then remote_id = item.remote_id else remote_id = null
+        data.update({path: path_}, {$set: {value: val, remote_id: remote_id}})
 
   'click .xclose':(e,t)->
     value = $(e.target).attr('value')
     data.remove({path: path(t.data.formId, t.data.name), value:value})
+
+  'focusin .xautocomplete-input': (e,t) ->
+    val = $(e.target).val()
+    Session.set 'query', ''
+    Session.set 'query', val
+    path_ = path(t.data.formId, t.data.name)
+    current_input = path_
+
 
   'focusout .xautocomplete': (e,t)->
     if not $(e.relatedTarget).is('.xpopover')
@@ -127,11 +143,18 @@ $.valHooks['xautocomplete'] =
     isArray = $(el).attr('array')
     path_ = path($(el).attr('formId'), $(el).attr('name'))
     if isArray == 'true'
-      return (x.value for x in data.find(path: path_).fetch())
+      if $(el).attr('reference') == 'true'
+        return (x.remote_id for x in data.find(path: path_).fetch())
+      else
+        return (x.value for x in data.find(path: path_).fetch())
     else
-      if $(el).attr('strict') == 'true' and $(el).find('.xautocomplete-input').attr('_id') == 'null'
+      item = data.findOne(path: path_)
+      if $(el).attr('reference') == 'true'
+        return item.remote_id
+
+      if $(el).attr('strict') == 'true' and item.remote_id == null
         return null
-      return data.findOne(path: path_)
+      return item.value
 
 
 $.fn.xautocomplete = ->
