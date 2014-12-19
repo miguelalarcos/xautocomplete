@@ -5,7 +5,7 @@
     cursor: pointer;
 }
 .xselected{
-    background-color: #58FAF4;
+    background-color: lightgray;
     font-weight: bold;
 }
 

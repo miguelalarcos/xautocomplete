@@ -21,10 +21,12 @@ Template.xautocomplete.helpers
     if _.isArray(this.value)
       for value in this.value
         data.insert({path: path_, value:value})
-    else if _.has(this.value, '_id')
-      data.insert({path: path_, value: window[this.valueFunction](this.value), remote_id: this.value._id})
+    #else if _.has(this.value, '_id')
+    else if this.reference
+      obj = (window[this.reference]).findOne(this.value)
+      data.insert({path: path_, value: window[this.valueFunction](obj), remote_id: this.value._id})
     else
-      data.insert({path: path_, value: this.value})
+      data.insert({path: path_, value: this.value, remote_id: -1})
     null
 
   # this is reactive based on data collection and formId and name
@@ -32,12 +34,9 @@ Template.xautocomplete.helpers
     if this.array == 'true'
       return null
     item = data.findOne(path: path(this.formId, this.name))
-    if item
-      item.value
-    else
-      null
+    if item then item.value else null
 
-  # this is reactive based on array collection and formId and name
+  # this is reactive based on data collection and formId and name
   array: ->
     if this.array == 'true'
       data.find({path: path(this.formId, this.name)})
@@ -79,6 +78,7 @@ Template.xautocomplete.events
     items.remove({})
     Session.set 'query',''
     index = -1
+    $(t.find '.xautocomplete-input').val('')
 
   'keyup .xautocomplete-input': (e,t)->
     if e.keyCode == 38
@@ -104,6 +104,7 @@ Template.xautocomplete.events
         items.remove({})
         Session.set('query','')
         index = -1
+        $(t.find '.xautocomplete-input').val('')
     else if e.keyCode == 27
       items.remove({})
       Session.set('query','')
@@ -152,7 +153,7 @@ $.valHooks['xautocomplete'] =
       if $(el).attr('reference') == 'true'
         return item.remote_id
 
-      if $(el).attr('strict') == 'true' and item.remote_id == null
+      if item.remote_id == null
         return null
       return item.value
 
