@@ -13,35 +13,10 @@
         Un autocompletado array reference: {{> xautocomplete array='true' reference='authors' formId='5' name='author' value=this.authorId valueFunction='valueAuthors' renderFunction='renderAuthors' call='authors'}}
     {{/with}}
     <br>
-    <button id="button">click to modal</button>
-    {{> myModal dataModal}}
+    <button id="button">click to log</button>
 </template>
 
 <template name="authors">
     <td>{{this.name}} <b>{{this.surname}}</b></td>
 </template>
 
-<template name="myModal">
-    <div id='my-modal' class="ui modal">
-        <i class="close icon"></i>
-        <div class="header">
-            hello {{name}}!
-        </div>
-        <div class="content">
-            <div class="description">
-                <div class="ui header">We've auto-chosen a profile image for you.</div>
-                <p>Is it okay to use this photo?</p>
-                <input id='user-email' type="text">
-            </div>
-        </div>
-        <div class="actions">
-            <div class="ui black cancel button">
-                Nope
-            </div>
-            <div class="ui positive right labeled icon button">
-                Yep, that's me
-                <i class="checkmark icon"></i>
-            </div>
-        </div>
-    </div>
-</template>

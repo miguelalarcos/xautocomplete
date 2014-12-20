@@ -11,7 +11,10 @@ if not authors.findOne()
 
 Meteor.methods
   authors: (query)->
-    authors.find(surname: {$regex: '^.*'+query+'.*$'}).fetch()
+    if query != ''
+      authors.find(surname: {$regex: '^.*'+query+'.*$'}).fetch()
+    else
+      []
 
 Meteor.publishComposite 'bookById', (_id)->
   find: -> books.find _id: _id
