@@ -2,6 +2,8 @@ describe "test xautocomplete.", ->
   it "should show xpopover.", ->
     e = $.Event('keyup')
     e.keyCode = 68
-    $('body>div>input').trigger(e)
+    $('input').trigger(e)
+    console.log '-->', $('input')[0]
     expect(true).toBe(true)
-    console.log 'fin'
+
+
