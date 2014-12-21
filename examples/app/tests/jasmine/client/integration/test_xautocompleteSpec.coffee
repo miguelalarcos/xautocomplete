@@ -1,9 +1,12 @@
 describe "test xautocomplete.", ->
+  beforeEach window.waitForRouter
   it "should show xpopover.", ->
-    e = $.Event('keyup')
-    e.keyCode = 68
-    $('input').trigger(e)
-    console.log '-->', $('input')[0]
+    #console.log '->', $('input')[3]
+    el = $('input')
+    el.val('D')
+
+    console.log $('.xpopover')
+    console.log el
     expect(true).toBe(true)
 
 
