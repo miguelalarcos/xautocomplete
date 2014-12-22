@@ -1,13 +1,25 @@
+backup = null
 MochaWeb?.testOnly ->
   describe "test xautocomplete.", ->
     beforeEach window.waitForRouter
-    it "should show xpopover.", ->
-      el = $($('input')[0])
+    before ->
+      backup = Meteor.call
+    after ->
+      Meteor.call = backup
+    it "should show xpopover.", (done)->
+      Meteor.call = (call, query, func)->
+        func null, [{_id:'0', name: 'Richard', surname:'Dawkins'}]
+
+      el = $('input').first()
       el.val('D')
       e = $.Event('keyup')
       el.trigger(e)
-      console.log el[0]
-      x = el.siblings('.xpopover')
-      console.log x[0]
-      #expect(true).toBe(true)
+      Meteor.setTimeout ->
+        x = el.siblings('.xpopover').first()
+        x = x.find('tr').length
+        chai.assert.equal x, 1
+        done()
+
+
+
 
