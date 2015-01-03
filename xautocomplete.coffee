@@ -14,19 +14,20 @@ path = (formId, name) -> formId + ':' + name
 
   
 Template.xautocomplete.helpers
-  # this function set the initial values of the widget
+  # this function setup the widget
   init: ->
     path_ = path(this.formId, this.name)
     data.remove(path: path_)
-    if _.isArray(this.value)
-      for value in this.value
-        data.insert({path: path_, value:value})
-    #else if _.has(this.value, '_id')
-    else if this.reference
-      obj = (window[this.reference]).findOne(this.value)
-      data.insert({path: path_, value: window[this.valueFunction](obj), remote_id: this.value._id})
-    else
-      data.insert({path: path_, value: this.value, remote_id: -1})
+    #if _.isArray(this.value)
+    #  for value in this.value
+    #    data.insert({path: path_, value:value})
+
+    #else if this.reference
+    #  obj = (window[this.reference]).findOne(this.value)
+    #  data.insert({path: path_, value: window[this.valueFunction](obj), remote_id: this.value._id})
+    #else
+    #  data.insert({path: path_, value: this.value, remote_id: -1})
+    data.insert({path: path_, value: '', remote_id: -1})
     null
 
   # this is reactive based on data collection and formId and name

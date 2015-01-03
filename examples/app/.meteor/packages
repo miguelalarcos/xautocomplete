@@ -4,11 +4,12 @@
 # but you can also edit it by hand.
 
 meteor-platform
-insecure
 coffeescript
 nooitaf:semantic-ui
 miguelalarcos:xautocomplete
 reywood:publish-composite
 iron:router
-mike:mocha
 practicalmeteor:sinon
+velocity:html-reporter
+sanjo:jasmine
+nblazer:casperjs
