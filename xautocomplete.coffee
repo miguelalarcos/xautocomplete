@@ -20,16 +20,16 @@ Template.xautocomplete.helpers
     atts = this.atts or this
     path_ = path(atts.formid, atts.name)
     data.remove(path: path_)
-    #if _.isArray(this.value)
-    #  for value in this.value
-    #    data.insert({path: path_, value:value})
+    if _.isArray(this.value)
+      for value in this.value
+        data.insert({path: path_, value:value})
+    else
+      if this.reference
+        obj = (window[this.reference]).findOne(this.value)
+        data.insert({path: path_, value: window[this.valueFunction](obj), remote_id: this._id})
+      else
+        data.insert({path: path_, value: this.value, remote_id: -1})
 
-    #else if this.reference
-    #  obj = (window[this.reference]).findOne(this.value)
-    #  data.insert({path: path_, value: window[this.valueFunction](obj), remote_id: this.value._id})
-    #else
-    #  data.insert({path: path_, value: this.value, remote_id: -1})
-    data.insert({path: path_, value: '', remote_id: -1})
     null
 
   # this is reactive based on data collection and formid and name
