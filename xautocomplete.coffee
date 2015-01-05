@@ -25,8 +25,9 @@ Template.xautocomplete.helpers
         data.insert({path: path_, value:value})
     else
       if this.reference
+        console.log this.reference, this.value
         obj = (window[this.reference]).findOne(this.value)
-        data.insert({path: path_, value: window[this.valueFunction](obj), remote_id: this._id})
+        data.insert({path: path_, value: window[this.valuefunction](obj), remote_id: this._id})
       else
         data.insert({path: path_, value: this.value, remote_id: -1})
 
@@ -50,7 +51,7 @@ Template.xautocomplete.helpers
   # this is reactive based on query Reactive var. It makes a call to the server to get the items of the popover
   items: ->
     query_ = query.get()
-    atts = this.atts
+    atts = this.atts or this
     call = atts.call
     renderFunction = atts.renderfunction
     valueFunction = atts.valuefunction
