@@ -12,6 +12,7 @@ Package.onUse(function(api) {
   api.use('jquery', 'client');
   api.use('session', 'client');
   api.use('templating', 'client');
+  api.use('reactive-var', 'client');
   api.addFiles(['xautocomplete.html', 'xautocomplete.coffee', 'xautocomplete.css'], 'client');
 });
 

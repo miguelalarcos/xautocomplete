@@ -1,11 +1,11 @@
 <template name="hello">
-        Un autocompletado simple: {{> xautocomplete formId='2' name='author' value=this.authorSurname valueFunction='valueAuthors' renderFunction='renderAuthors' call='authors'}}
+        Un autocompletado simple: {{> xautocomplete formid='2' name='author' value=this.authorSurname valuefunction='valueAuthors' renderfunction='renderAuthors' call='authors'}}
     <br>
-        Un autocompletado simple reference: {{> xautocomplete reference='authors' formId='3' name='author' value=this.authorId valueFunction='valueAuthors' renderFunction='renderAuthors' call='authors'}}
+        Un autocompletado simple reference: {{> xautocomplete reference='authors' formid='3' name='author' value=this.authorId valuefunction='valueAuthors' renderfunction='renderAuthors' call='authors'}}
     <br>
-        Un autocompletado array: {{> xautocomplete array='true' formId='4' name='author' value=this.authorSurname valueFunction='valueAuthors' renderFunction='renderAuthors' call='authors'}}
+        Un autocompletado array: {{> xautocomplete multiple='true' formid='4' name='author' value=this.authorSurname valuefunction='valueAuthors' renderfunction='renderAuthors' call='authors'}}
     <br>
-        Un autocompletado array reference: {{> xautocomplete array='true' reference='authors' formId='5' name='author' value=this.authorId valueFunction='valueAuthors' renderFunction='renderAuthors' call='authors'}}
+        Un autocompletado array reference: {{> xautocomplete multiple='true' reference='authors' formid='5' name='author' value=this.authorId valuefunction='valueAuthors' renderfunction='renderAuthors' call='authors'}}
     <br>
     <button id="button">click to log</button>
 </template>
