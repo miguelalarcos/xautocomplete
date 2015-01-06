@@ -16,20 +16,30 @@ path = (formid, name) -> formid + ':' + name
 
 Template.xautocomplete.helpers
   # this function setup the widget
-  init: ->
+  init: (obj)->
     atts = this.atts or this
     path_ = path(atts.formid, atts.name)
     data.remove(path: path_)
-    if _.isArray(this.value)
-      for value in this.value
-        data.insert({path: path_, value:value})
+
+    value = this.value or obj[atts.name]
+
+    if _.isArray(value)
+      for val in value
+        if this.reference
+          collection = this.reference.split('.')[0]
+          field = this.reference.split('.')[1]
+          obj = (window[collection]).findOne(value)
+          data.insert({path: path_, value: obj[field], remote_id: obj._id})
+        else
+          data.insert({path: path_, value:val, remote_id: -1})
     else
       if this.reference
-        console.log this.reference, this.value
-        obj = (window[this.reference]).findOne(this.value)
-        data.insert({path: path_, value: window[this.valuefunction](obj), remote_id: this._id})
+        collection = this.reference.split('.')[0]
+        field = this.reference.split('.')[1]
+        obj = (window[collection]).findOne(value)
+        data.insert({path: path_, value: obj[field], remote_id: obj._id})
       else
-        data.insert({path: path_, value: this.value, remote_id: -1})
+        data.insert({path: path_, value: value, remote_id: -1})
 
     null
 
@@ -50,18 +60,22 @@ Template.xautocomplete.helpers
 
   # this is reactive based on query Reactive var. It makes a call to the server to get the items of the popover
   items: ->
+    self = this
     query_ = query.get()
     atts = this.atts or this
     call = atts.call
     renderFunction = atts.renderfunction
-    valueFunction = atts.valuefunction
     if path(atts.formid, atts.name) == current_input
       Meteor.call call, query_, (error, result)->
         items.remove({})
         for item, i in result
           rendered = window[renderFunction] item
-          value = window[valueFunction] item
-          items.insert({value: value, content:rendered, index: i, remote_id: item._id, doc: item})
+          if atts.reference
+            field = atts.reference.split('.')[1]
+            value = item[field]
+          else
+            value = item[self.displayField]
+          items.insert({value: value, content:rendered, index: i, remote_id: item._id})#, doc: item})
 
       items.find({})
     else
@@ -116,7 +130,8 @@ Template.xautocomplete.events
         #Session.set('query','')
         query.set('')
         index = -1
-        #$(t.find '.xautocomplete-input').val('')
+        $(t.find '.xautocomplete-input').val('')
+
     else if e.keyCode == 27
       items.remove({})
       #Session.set('query','')
@@ -126,7 +141,7 @@ Template.xautocomplete.events
       val = $(e.target).val()
       atts = t.data.atts or t.data
       path_ = path(atts.formid, atts.name)
-      #Session.set 'query', val
+
       query.set(val)
       current_input = path_
 
@@ -142,8 +157,6 @@ Template.xautocomplete.events
 
   'focusin .xautocomplete-input': (e,t) ->
     val = $(e.target).val()
-    #Session.set 'query', ''
-    #Session.set 'query', val
     query.set('')
     query.set(val)
     atts = t.data.atts or t.data
@@ -154,7 +167,6 @@ Template.xautocomplete.events
   'focusout .xautocomplete': (e,t)->
     if not $(e.relatedTarget).is('.xpopover')
       items.remove({})
-      #Session.set('query','')
       query.set('')
       index = -1
 
@@ -182,17 +194,16 @@ $.valHooks['xautocomplete'] =
     path_ = path($(el).attr('formid'), $(el).attr('name'))
     reference = $(el).attr('reference')
     if reference not in [undefined, 'false']
-      obj = window[reference].findOne(value)
-      valueFunction = $(el).attr('valueFunction')
-      data.insert({path: path_, value: window[valueFunction](obj), remote_id: value})
+      collection = reference.split('.')[0]
+      field = reference.split('.')[1]
+      obj = window[collection].findOne(value)
+
+      data.insert({path: path_, value: obj[field], remote_id: value})
     else
       if not data.findOne({path: path_})
         data.insert({path: path_, value: value})
       else
         data.update({path: path_}, {$set:{value:value, remote_id:-1}})
-
-    #if not data.findOne({path: path_, value: obj.value})
-
 
 
 $.fn.xautocomplete = ->
