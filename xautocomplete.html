@@ -1,5 +1,5 @@
 <template name='xautocomplete'>
-    <div class="xwidget xautocomplete ui input" tabindex=100 formid="{{this.formid}}" name="{{this.name}}" multiple="{{this.array}}" reference="{{this.reference}}" {{this.atts}}>
+    <div class="xwidget xautocomplete ui input" tabindex=100 formid="{{this.formid}}" name="{{this.name}}" xmultiple="{{this.xmultiple}}" reference="{{this.reference}}" {{this.atts}}>
         {{init ..}}
         <input type='text' class="xautocomplete-input" value="{{value}}">
         <div class=xpopover tabindex=100>
@@ -10,7 +10,7 @@
             </table>
         </div>
         <br>
-        {{#each multiple}}
+        {{#each xmultiple}}
             <span class="ui label">{{this.value}} <i value="{{this.value}}" class="delete icon xclose"></i></span>
         {{/each}}
     </div>
