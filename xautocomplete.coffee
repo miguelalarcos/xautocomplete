@@ -29,7 +29,7 @@ Template.xautocomplete.helpers
         if atts.reference not in [undefined, 'false']
           collection = atts.reference
           obj = (window[collection]).findOne(val)
-          
+
           data.insert({path: path_, value: window[valueFunction](obj), remote_id: obj._id})
         else
           data.insert({path: path_, value: val, remote_id: -1})
@@ -172,6 +172,7 @@ Template.xautocomplete.events
 
 $.valHooks['xautocomplete'] =
   get : (el)->
+
     ismultiple = $(el).attr('xmultiple')
 
     path_ = path($(el).attr('formid'), $(el).attr('name'))
@@ -187,6 +188,7 @@ $.valHooks['xautocomplete'] =
         return item.remote_id
       if item.remote_id == null
         return null
+
       return item.value
 
   set : (el, value)->
