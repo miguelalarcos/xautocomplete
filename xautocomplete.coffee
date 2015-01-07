@@ -16,14 +16,13 @@ path = (formid, name) -> formid + ':' + name
 
 Template.xautocomplete.helpers
   # this function setup the widget
-  init: (obj)->
+  init: (obj)-> #pensar en implementarlo con set, pues parece repetitivo
     atts = this.atts or this
     path_ = path(atts.formid, atts.name)
     data.remove(path: path_)
-
     value = this.value or obj[atts.name]
-    console.log value, obj, atts.name
     valueFunction = atts.valuefunction
+
     if _.isArray(value)
       for val in value
         if atts.reference
@@ -73,7 +72,7 @@ Template.xautocomplete.helpers
         for item, i in result
           rendered = window[renderFunction] item
           value = window[valueFunction](item)
-          console.log value
+
           items.insert({value: value, content:rendered, index: i, remote_id: item._id})#, doc: item})
 
       items.find({})
@@ -173,7 +172,7 @@ Template.xautocomplete.events
 $.valHooks['xautocomplete'] =
   get : (el)->
     ismultiple = $(el).attr('xmultiple')
-    console.log 'ismultiple:', ismultiple, el
+
     path_ = path($(el).attr('formid'), $(el).attr('name'))
 
     if ismultiple == 'true'
@@ -185,24 +184,39 @@ $.valHooks['xautocomplete'] =
       item = data.findOne(path: path_)
       if $(el).attr('reference') not in [undefined, 'false']
         return item.remote_id
-
       if item.remote_id == null
         return null
       return item.value
-  set : (el, value)->
 
+  set : (el, value)->
+    console.log el, value
+    ismultiple = $(el).attr('xmultiple')
     path_ = path($(el).attr('formid'), $(el).attr('name'))
     reference = $(el).attr('reference')
     valueFunction = $(el).attr('valuefunction')
-    if reference not in [undefined, 'false']
-      collection = reference
-      obj = window[collection].findOne(value)
-      data.insert({path: path_, value: valueFunction(obj), remote_id: value})
-    else
-      if not data.findOne({path: path_})
-        data.insert({path: path_, value: value})
+
+    if ismultiple == 'true'
+      if reference not in [undefined, 'false']
+        collection = reference
+        for val in value
+          obj = window[collection].findOne(val)
+          data.insert({path: path_, value: valueFunction(obj), remote_id: val})
       else
-        data.update({path: path_}, {$set:{value:value, remote_id:-1}})
+        for val in value
+          if not data.findOne()
+            data.insert({path: path_, value: val})
+          else
+            data.update({path: path_}, {$set:{value:val, remote_id:-1}})
+    else
+      if reference not in [undefined, 'false']
+        collection = reference
+        obj = window[collection].findOne(value)
+        data.insert({path: path_, value: valueFunction(obj), remote_id: value})
+      else
+        if not data.findOne({path: path_})
+          data.insert({path: path_, value: value})
+        else
+          data.update({path: path_}, {$set:{value:value, remote_id:-1}})
 
 
 $.fn.xautocomplete = ->

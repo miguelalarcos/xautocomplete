@@ -1,4 +1,5 @@
 <template name="hello">
+    {{#with this.data}}
         Un autocompletado simple: {{> xautocomplete formid='2' name='authorSurname' valuefunction='valueAuthor' renderfunction='renderAuthors' call='authors'}}
     <br>
         Un autocompletado simple reference: {{> xautocomplete   reference='authors' formid='3' name='authorId' valuefunction='valueAuthor' renderfunction='renderAuthors' call='authors'}}
@@ -8,6 +9,7 @@
         Un autocompletado array reference: {{> xautocomplete  xmultiple='true' reference='authors' formid='5' name='authorId' valuefunction='valueAuthor' renderfunction='renderAuthors' call='authors'}}
     <br>
     <button id="button">click to log</button>
+    {{/with}}
 </template>
 
 <template name="authors">
