@@ -1,6 +1,6 @@
 # query is Reactive var where we are going to keep the text that the user is writing in the current autocomplete input
 #Session.set 'query', null
-query = new ReactiveVar('')
+@query = query = new ReactiveVar('')
 # we are going to keep the items to show in the popover as the user is writing in the autocomplete input
 @items = items = new Meteor.Collection null
 # in data we keep the values of the all autocomplete inputs
@@ -8,8 +8,8 @@ query = new ReactiveVar('')
 # index is the index in the popover where the user click
 index = -1
 # the path of the current autocomplete input where the user is typing
-current_input = null
-
+#current_input = null
+@current_input = current_input = {value: null}
 # each autocomplete input is identified by the formid and name
 path = (formid, name) -> formid + ':' + name
 
@@ -17,26 +17,26 @@ path = (formid, name) -> formid + ':' + name
 Template.xautocomplete.helpers
   # this function setup the widget
   init: (obj)-> #pensar en implementarlo con set, pues parece repetitivo
-
+    # if we come from autoform, the attributes are in this.atts. Else in this directly
     atts = this.atts or this
     path_ = path(atts.formid, atts.name)
     data.remove(path: path_)
+    #if we come from autoform, the value come in this.value. Else in the object passed
     value = this.value or obj[atts.name]
     valueFunction = atts.valuefunction
 
-    if atts.xmultiple == 'true'#_.isArray(value)
+    if atts.xmultiple == 'true'
       for val in value
         if atts.reference not in [undefined, 'false']
           collection = atts.reference
           obj = (window[collection]).findOne(val)
-
           data.insert({path: path_, value: window[valueFunction](obj), remote_id: obj._id})
         else
           data.insert({path: path_, value: val, remote_id: -1})
     else
       if atts.reference not in [undefined, 'false']
         collection = atts.reference
-        valueFunction = atts.valuefunction
+        #valueFunction = atts.valuefunction
         obj = (window[collection]).findOne(value)
         data.insert({path: path_, value: window[valueFunction](obj), remote_id: obj._id})
       else
@@ -67,15 +67,14 @@ Template.xautocomplete.helpers
     call = atts.call
     renderFunction = atts.renderfunction
     valueFunction = atts.valuefunction
-    if path(atts.formid, atts.name) == current_input
+
+    if path(atts.formid, atts.name) == current_input.value
       Meteor.call call, query_, (error, result)->
         items.remove({})
         for item, i in result
           rendered = window[renderFunction] item
           value = window[valueFunction](item)
-
           items.insert({value: value, content:rendered, index: i, remote_id: item._id})#, doc: item})
-
       items.find({})
     else
       null
@@ -96,14 +95,13 @@ Template.xautocomplete.events
       data.update({path: path_}, {$set: {value: selected.value, remote_id: selected.remote_id}})
 
     items.remove({})
-    #Session.set 'query',''
     query.set('')
     index = -1
     $(t.find '.xautocomplete-input').val('')
 
   'keyup .xautocomplete-input': (e,t)->
     if e.keyCode == 38
-      items.update({index:index}, {$set:{selected: ''}})
+      items.update({index:index}, {$set:{selected: ''}}) # items.update({}, {$set:{selected: ''}})
       if index == -1 then index = -1 else index -= 1
       items.update({index:index}, {$set:{selected: 'xselected'}})
     else if e.keyCode == 40
@@ -124,16 +122,13 @@ Template.xautocomplete.events
           data.update({path: path_}, {$set: {value: selected.value, remote_id: selected.remote_id}})
 
         # close popover
-
         items.remove({})
-        #Session.set('query','')
         query.set('')
         index = -1
         $(t.find '.xautocomplete-input').val('')
 
     else if e.keyCode == 27
       items.remove({})
-      #Session.set('query','')
       query.set('')
       index = -1
     else
@@ -142,9 +137,9 @@ Template.xautocomplete.events
       path_ = path(atts.formid, atts.name)
 
       query.set(val)
-      current_input = path_
+      current_input.value = path_
 
-      if not atts.xmultiple
+      if atts.xmultiple != 'true'
         item = items.findOne(value: val)
         if item then remote_id = item.remote_id else remote_id = null
         data.update({path: path_}, {$set: {value: val, remote_id: remote_id}})
@@ -160,7 +155,7 @@ Template.xautocomplete.events
     query.set(val)
     atts = t.data.atts or t.data
     path_ = path(atts.formid, atts.name)
-    current_input = path_
+    current_input.value = path_
 
 
   'focusout .xautocomplete': (e,t)->
@@ -172,9 +167,7 @@ Template.xautocomplete.events
 
 $.valHooks['xautocomplete'] =
   get : (el)->
-
     ismultiple = $(el).attr('xmultiple')
-
     path_ = path($(el).attr('formid'), $(el).attr('name'))
 
     if ismultiple == 'true'

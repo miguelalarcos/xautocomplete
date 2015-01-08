@@ -12,4 +12,3 @@ iron:router
 practicalmeteor:sinon
 velocity:html-reporter
 sanjo:jasmine
-nblazer:casperjs
