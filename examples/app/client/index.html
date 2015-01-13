@@ -16,3 +16,8 @@
     <td>{{this.name}} <b>{{this.surname}}</b></td>
 </template>
 
+<template name="testing">
+    {{#with this.data}}
+        {{> xautocomplete formid='1' name='authorSurname' valuefunction='valueAuthor' renderfunction='renderAuthors' call='authors'}}
+    {{/with}}
+</template>

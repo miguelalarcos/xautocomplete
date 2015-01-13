@@ -136,7 +136,6 @@ Template.xautocomplete.events
       atts = t.data.atts or t.data
       path_ = path(atts.formid, atts.name)
 
-      console.log 'query.set val', val
       query.set(val)
       current_input.value = path_
 
