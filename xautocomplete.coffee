@@ -26,25 +26,26 @@ Template.xautocomplete.helpers
     path_ = path(atts.formid, atts.name)
     data.remove(path: path_)
     #if we come from autoform, the value come in this.value. Else in the object passed
+
     value = this.value or obj[atts.name]
     valueFunction = atts.valuefunction
 
     if atts.xmultiple == 'true'
+      if value is undefined then value = []
       for val in value
         if atts.reference not in [undefined, 'false']
           collection = atts.reference
           obj = (window[collection]).findOne(val)
           data.insert({path: path_, value: window[valueFunction](obj), remote_id: obj._id})
         else
-          data.insert({path: path_, value: val, remote_id: -1})
+          data.insert({path: path_, value: val, remote_id: null})
     else
       if atts.reference not in [undefined, 'false']
         collection = atts.reference
-        #valueFunction = atts.valuefunction
         obj = (window[collection]).findOne(value)
-        data.insert({path: path_, value: window[valueFunction](obj), remote_id: obj._id})
+        data.insert({path: path_, value: window[valueFunction](obj), remote_id: value})
       else
-        data.insert({path: path_, value: value, remote_id: -1})
+        data.insert({path: path_, value: value, remote_id: null})
 
     null
 
@@ -206,7 +207,7 @@ $.valHooks['xautocomplete'] =
           if not data.findOne({path: path_, value: val})
             data.insert({path: path_, value: val})
           else
-            data.update({path: path_}, {$set:{value:val, remote_id:-1}})
+            data.update({path: path_}, {$set:{value:val, remote_id: null}})
     else
       if reference not in [undefined, 'false']
         collection = reference
@@ -216,7 +217,7 @@ $.valHooks['xautocomplete'] =
         if not data.findOne({path: path_})
           data.insert({path: path_, value: value})
         else
-          data.update({path: path_}, {$set:{value:value, remote_id:-1}})
+          data.update({path: path_}, {$set:{value:value, remote_id: null}})
 
 
 $.fn.xautocomplete = ->
