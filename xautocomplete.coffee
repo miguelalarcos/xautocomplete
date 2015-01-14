@@ -1,15 +1,19 @@
 # query is Reactive var where we are going to keep the text that the user is writing in the current autocomplete input
-#Session.set 'query', null
 @query = query = new ReactiveVar('')
+
 # we are going to keep the items to show in the popover as the user is writing in the autocomplete input
 @items = items = new Meteor.Collection null
+
 # in data we keep the values of the all autocomplete inputs
 @data = data = new Meteor.Collection null
+
 # index is the index in the popover where the user click
 index = -1
+
 # the path of the current autocomplete input where the user is typing
-#current_input = null
-@current_input = current_input = {value: null}
+current_input = null
+#@current_input = current_input = {value: null}
+
 # each autocomplete input is identified by the formid and name
 path = (formid, name) -> formid + ':' + name
 
@@ -68,7 +72,7 @@ Template.xautocomplete.helpers
     renderFunction = atts.renderfunction
     valueFunction = atts.valuefunction
 
-    if path(atts.formid, atts.name) == current_input.value
+    if path(atts.formid, atts.name) == current_input
       Meteor.call call, query_, (error, result)->
         items.remove({})
         for item, i in result
@@ -137,7 +141,7 @@ Template.xautocomplete.events
       path_ = path(atts.formid, atts.name)
 
       query.set(val)
-      current_input.value = path_
+      current_input = path_
 
       if atts.xmultiple != 'true'
         item = items.findOne(value: val)
@@ -155,7 +159,7 @@ Template.xautocomplete.events
     query.set(val)
     atts = t.data.atts or t.data
     path_ = path(atts.formid, atts.name)
-    current_input.value = path_
+    current_input = path_
 
 
   'focusout .xautocomplete': (e,t)->
