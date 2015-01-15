@@ -185,8 +185,8 @@ $.valHooks['xautocomplete'] =
       if $(el).attr('reference') not in [undefined, 'false']
         return item.remote_id
 
-      #if item.remote_id == null
-      #  return null
+      if item.remote_id == null
+        return null
 
       return item.value
 
