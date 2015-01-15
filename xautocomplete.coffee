@@ -36,7 +36,7 @@ Template.xautocomplete.helpers
         if atts.reference not in [undefined, 'false']
           collection = atts.reference
           obj = (window[collection]).findOne(val)
-          data.insert({path: path_, value: window[valueFunction](obj), remote_id: obj._id})
+          data.insert({path: path_, value: window[valueFunction](obj), remote_id: val})
         else
           data.insert({path: path_, value: val, remote_id: null})
     else
@@ -184,8 +184,9 @@ $.valHooks['xautocomplete'] =
       item = data.findOne(path: path_)
       if $(el).attr('reference') not in [undefined, 'false']
         return item.remote_id
-      if item.remote_id == null
-        return null
+
+      #if item.remote_id == null
+      #  return null
 
       return item.value
 
