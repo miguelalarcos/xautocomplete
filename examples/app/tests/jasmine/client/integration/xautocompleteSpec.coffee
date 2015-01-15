@@ -9,7 +9,7 @@ describe "several tests...", ->
 
   el= null
   beforeEach ->
-    dataBook = {_id:'0', title:'The dangerous idea of Darwin', authorId: '1', authorSurname:'Dennet, Daniel', coauthorsID:['0','1'], coauthors: ['ABC', 'XYZ']}
+    dataBook = {_id:'0', title:'The dangerous idea of Darwin', authorId: '1', surname:'Dennet, Daniel', authorsId:['0','1'], surnames: ['ABC', 'XYZ']}
     el = Blaze.renderWithData(Template.testing, {data: dataBook},$('body')[0])
   afterEach ->
     Blaze.remove(el)
@@ -59,9 +59,9 @@ describe "several tests...", ->
     $('[formid=1]>.xautocomplete-input').trigger(event)
     event = jQuery.Event('keyup', {keyCode: 39})
     $('[formid=1]>.xautocomplete-input').trigger(event)
-    expect(data.findOne({path: '1:authorSurname'}).value).toBe('Dawkins, Richard')
+    expect(data.findOne({path: '1:surname'}).value).toBe('Dawkins, Richard')
 
   it "test5", ->
-    data.update({path: '1:authorSurname'}, {$set:{value:'miguel'}})
+    data.update({path: '1:surname'}, {$set:{value:'miguel'}})
     Meteor.flush()
     expect($('[formid=1]>.xautocomplete-input').val()).toBe('miguel')
