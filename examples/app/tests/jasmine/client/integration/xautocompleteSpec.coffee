@@ -8,7 +8,7 @@ result = [{_id:'0', name: 'Richard', surname:'Dawkins'},
 
 dataBook = {_id:'0', title:'The dangerous idea of Darwin', authorId: '1', surname:'Dennet, Daniel', authorsId:[], surnames: []}
 
-describe "several tests...", ->
+describe "simple", ->
   el= null
   beforeEach ->
     el = Blaze.renderWithData(Template.testing, {data: dataBook},$('body')[0])
@@ -16,13 +16,13 @@ describe "several tests...", ->
   afterEach ->
     Blaze.remove(el)
 
-  it "test 1", ->
+  it "type a letter and query get", ->
     $('[formid=1]>.xautocomplete-input').val('F')
     event = jQuery.Event('keyup', {keyCode:70})
     $('[formid=1]>.xautocomplete-input').trigger(event)
     expect(query.get()).toBe('F')
 
-  it "test 2", ->
+  it "query.set and expect Meteor call", ->
     event = jQuery.Event('keyup')
     $('[formid=1]>.xautocomplete-input').trigger(event)
     meteor_call = (call, query_, f) -> f(null, result)
@@ -34,7 +34,7 @@ describe "several tests...", ->
     expect(Meteor.call.calls.first().args[0]).toBe('authors')
     expect(Meteor.call.calls.first().args[1]).toBe('D')
 
-  it "test 3", ->
+  it "query.set and expect pop over", ->
     event = jQuery.Event('keyup')
     $('[formid=1]>.xautocomplete-input').trigger(event)
     meteor_call = (call, query_, f) -> f(null, result)
@@ -46,7 +46,7 @@ describe "several tests...", ->
     expect(long).toBe(3)
     expect($('[formid=1]>.xpopover>table>tr>td').text()).toBe('Richard DawkinsDaniel DennetCharles Darwin')
 
-  it "test 4", ->
+  it "query.set, right key and expect data", ->
     event = jQuery.Event('keyup')
     $('[formid=1]>.xautocomplete-input').trigger(event)
     meteor_call = (call, query_, f) -> f(null, result)
@@ -58,21 +58,7 @@ describe "several tests...", ->
     $('[formid=1]>.xautocomplete-input').trigger(event)
     expect(data.findOne({path: '1:surname'}).value).toBe('Dawkins, Richard')
 
-  it "test 4.5", ->
-    event = jQuery.Event('keyup')
-    $('[formid=1]>.xautocomplete-input').trigger(event)
-    meteor_call = (call, query_, f) -> f(null, result)
-    spyOn(Meteor, 'call').and.callFake meteor_call
-
-    query.set('D')
-    Meteor.flush()
-    event = jQuery.Event('keyup', {keyCode: 40})
-    $('[formid=1]>.xautocomplete-input').trigger(event)
-    event = jQuery.Event('keyup', {keyCode: 39})
-    $('[formid=1]>.xautocomplete-input').trigger(event)
-    expect(data.findOne({path: '1:surname'}).value).toBe('Dawkins, Richard')
-
-  it "test 4.6", ->
+  it "query.set, down key, right key and expect data", ->
     event = jQuery.Event('keyup')
     $('[formid=1]>.xautocomplete-input').trigger(event)
     meteor_call = (call, query_, f) -> f(null, result)
@@ -82,6 +68,20 @@ describe "several tests...", ->
     Meteor.flush()
     event = jQuery.Event('keyup', {keyCode: 40})
     $('[formid=1]>.xautocomplete-input').trigger(event)
+    event = jQuery.Event('keyup', {keyCode: 39})
+    $('[formid=1]>.xautocomplete-input').trigger(event)
+    expect(data.findOne({path: '1:surname'}).value).toBe('Dawkins, Richard')
+
+  it "query.set, several down key, one right key and expect data", ->
+    event = jQuery.Event('keyup')
+    $('[formid=1]>.xautocomplete-input').trigger(event)
+    meteor_call = (call, query_, f) -> f(null, result)
+    spyOn(Meteor, 'call').and.callFake meteor_call
+
+    query.set('D')
+    Meteor.flush()
+    event = jQuery.Event('keyup', {keyCode: 40})
+    $('[formid=1]>.xautocomplete-input').trigger(event)
     $('[formid=1]>.xautocomplete-input').trigger(event)
     $('[formid=1]>.xautocomplete-input').trigger(event)
     $('[formid=1]>.xautocomplete-input').trigger(event)
@@ -89,18 +89,46 @@ describe "several tests...", ->
     $('[formid=1]>.xautocomplete-input').trigger(event)
     expect(data.findOne({path: '1:surname'}).value).toBe('Dawkins, Richard')
 
-  it "test5", ->
+  it "esc means popover to close", ->
+    #event = jQuery.Event('keyup')
+    #$('[formid=1]>.xautocomplete-input').trigger(event)
+    meteor_call = (call, query_, f) -> f(null, result)
+    spyOn(Meteor, 'call').and.callFake meteor_call
+
+    query.set('D')
+    Meteor.flush()
+    event = jQuery.Event('keyup', {keyCode: 40})
+    $('[formid=1]>.xautocomplete-input').trigger(event)
+    event = jQuery.Event('keyup', {keyCode: 27})
+    $('[formid=1]>.xautocomplete-input').trigger(event)
+    expect(items.find().fetch().length).toBe(0)
+
+  it "click .item and expect data and items.length 0", ->
+    #event = jQuery.Event('keyup')
+    #$('[formid=1]>.xautocomplete-input').trigger(event)
+    meteor_call = (call, query_, f) -> f(null, result)
+    spyOn(Meteor, 'call').and.callFake meteor_call
+
+    query.set('D')
+    Meteor.flush()
+    event = jQuery.Event('click')
+
+    $('[formid=1] tr[index=0].xitem').trigger(event)
+    expect(data.findOne({path: '1:surname'}).value).toBe('Dawkins, Richard')
+    expect(items.find().fetch().length).toBe(0)
+
+  it "data update means data goes to .xautocomplete-input", ->
     data.update({path: '1:surname'}, {$set:{value:'miguel'}})
     Meteor.flush()
     expect($('[formid=1]>.xautocomplete-input').val()).toBe('miguel')
 
-  it "test 6", ->
+  it "test set and get", ->
     $('[formid=1]').val('miguel')
     expect(data.findOne(path:'1:surname').value).toBe('miguel')
     v = $('[formid=1]').val()
     expect(v).toBe('miguel')
 
-describe "simple reference...", ->
+describe "simple reference", ->
   el= null
 
   beforeEach ->
@@ -110,13 +138,13 @@ describe "simple reference...", ->
   afterEach ->
     Blaze.remove(el)
 
-  it "test 1", ->
+  it "test set and get", ->
     $('[formid=1]').val('0')
     expect(data.findOne(path:'1:authorId').value).toBe('Dawkins, Richard')
     v = $('[formid=1]').val()
     expect(v).toBe('0')
 
-  it "test 2", ->
+  it "query.set, expect data and get", ->
     event = jQuery.Event('keyup')
     $('[formid=1]>.xautocomplete-input').trigger(event)
     meteor_call = (call, query_, f) -> f(null, result)
@@ -131,7 +159,7 @@ describe "simple reference...", ->
     expect(v).toBe('0')
 
 
-describe "multiple...", ->
+describe "multiple", ->
   el= null
 
   beforeEach ->
@@ -141,7 +169,7 @@ describe "multiple...", ->
   afterEach ->
     Blaze.remove(el)
 
-  it "test 1", ->
+  it "set and get", ->
     $('[formid=1]').val(['XYZ', 'ABC'])
     array = data.find(path:'1:surnames').fetch()
     surnames = (x.value for x in array)
@@ -149,7 +177,7 @@ describe "multiple...", ->
     v = $('[formid=1]').val()
     expect(v).toEqual(['XYZ', 'ABC'])
 
-  it "test 1.5", ->
+  it "set and expect labels", ->
     $('[formid=1]').val(['XYZ', 'ABC'])
     expect($('[formid=1]>span.label').length).toBe(2)
     span = $('[formid=1]>span.label')[0]
@@ -157,7 +185,7 @@ describe "multiple...", ->
     span = $('[formid=1]>span.label')[1]
     expect($(span).text()).toEqual('ABC ')
 
-  it "test 2", ->
+  it "set, expect data and get", ->
     event = jQuery.Event('keyup')
     $('[formid=1]>.xautocomplete-input').trigger(event)
     meteor_call = (call, query_, f) -> f(null, result)
@@ -175,7 +203,7 @@ describe "multiple...", ->
     expect(v).toEqual(['Dawkins, Richard'])
 
 
-describe "multiple reference...", ->
+describe "multiple reference", ->
   el= null
 
   beforeEach ->
@@ -185,7 +213,7 @@ describe "multiple reference...", ->
   afterEach ->
     Blaze.remove(el)
 
-  it "test 1", ->
+  it "set and get", ->
     $('[formid=1]').val(['0', '1'])
     array = data.find(path:'1:authorsId').fetch()
     surnames = (x.value for x in array)
@@ -193,7 +221,7 @@ describe "multiple reference...", ->
     v = $('[formid=1]').val()
     expect(v).toEqual(['0', '1'])
 
-  it "test 1.5", ->
+  it "set, expect labels", ->
     $('[formid=1]').val(['0', '1'])
     expect($('[formid=1]>span.label').length).toBe(2)
     span = $('[formid=1]>span.label')[0]
@@ -201,7 +229,7 @@ describe "multiple reference...", ->
     span = $('[formid=1]>span.label')[1]
     expect($(span).text()).toEqual('Dennet, Daniel ')
 
-  it "test 2", ->
+  it "query.set, right key, expect data and get", ->
     event = jQuery.Event('keyup')
     $('[formid=1]>.xautocomplete-input').trigger(event)
     meteor_call = (call, query_, f) -> f(null, result)
