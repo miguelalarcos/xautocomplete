@@ -21,3 +21,21 @@
         {{> xautocomplete formid='1' name='surname' valuefunction='valueAuthor' renderfunction='renderAuthors' call='authors'}}
     {{/with}}
 </template>
+
+<template name="testing_reference">
+    {{#with this.data}}
+        {{> xautocomplete formid='1' name='authorId' reference='authors' valuefunction='valueAuthor' renderfunction='renderAuthors' call='authors'}}
+    {{/with}}
+</template>
+
+<template name="testing_multiple">
+    {{#with this.data}}
+        {{> xautocomplete xmultiple='true' formid='1' name='surnames' valuefunction='valueAuthor' renderfunction='renderAuthors' call='authors'}}
+    {{/with}}
+</template>
+
+<template name="testing_multiple_reference">
+    {{#with this.data}}
+        {{> xautocomplete  xmultiple='true' reference='authors' formid='1' name='authorsId' valuefunction='valueAuthor' renderfunction='renderAuthors' call='authors'}}
+    {{/with}}
+</template>

@@ -3,9 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="da967abc-082f-41dd-884a-438b5adb82c1" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/app/client/index.html" afterPath="$PROJECT_DIR$/examples/app/client/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/app/server/methods.coffee" afterPath="$PROJECT_DIR$/examples/app/server/methods.coffee" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/xautocomplete.coffee" afterPath="$PROJECT_DIR$/xautocomplete.coffee" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/xautocomplete.html" afterPath="$PROJECT_DIR$/xautocomplete.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/app/tests/jasmine/client/integration/xautocompleteSpec.coffee" afterPath="$PROJECT_DIR$/examples/app/tests/jasmine/client/integration/xautocompleteSpec.coffee" />
     </list>
     <ignored path="miguelalarcos:xautocomplete.iws" />
@@ -33,28 +33,28 @@
       <file leaf-file-name="xautocomplete.coffee" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/xautocomplete.coffee">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="3473" max-vertical-offset="4212">
-              <caret line="208" column="50" selection-start-line="208" selection-start-column="50" selection-end-line="208" selection-end-column="50" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="3301" max-vertical-offset="4302">
+              <caret line="202" column="47" selection-start-line="202" selection-start-column="47" selection-end-line="202" selection-end-column="47" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/examples/app/client/index.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.53491825" vertical-offset="0" max-vertical-offset="673">
-              <caret line="20" column="50" selection-start-line="20" selection-start-column="50" selection-end-line="20" selection-end-column="50" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="xautocompleteSpec.coffee" pinned="false" current-in-tab="false">
+      <file leaf-file-name="xautocompleteSpec.coffee" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/examples/app/tests/jasmine/client/integration/xautocompleteSpec.coffee">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1278">
-              <caret line="60" column="4" selection-start-line="60" selection-start-column="4" selection-end-line="60" selection-end-column="4" />
+            <state vertical-scroll-proportion="0.64" vertical-offset="2378" max-vertical-offset="4032">
+              <caret line="157" column="39" selection-start-line="157" selection-start-column="39" selection-end-line="157" selection-end-column="39" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="xautocomplete.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/xautocomplete.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-0.6666667" vertical-offset="0" max-vertical-offset="396">
+              <caret line="1" column="204" selection-start-line="1" selection-start-column="204" selection-end-line="1" selection-end-column="204" />
               <folding />
             </state>
           </provider>
@@ -92,14 +92,14 @@
         <option value="$PROJECT_DIR$/wrapAF.coffee" />
         <option value="$PROJECT_DIR$/package.js" />
         <option value="$PROJECT_DIR$/xautocomplete.css" />
-        <option value="$PROJECT_DIR$/xautocomplete.html" />
         <option value="$PROJECT_DIR$/examples/app/client/router.coffee" />
         <option value="$PROJECT_DIR$/examples/app/packages/tests-proxy/package.js" />
         <option value="$PROJECT_DIR$/examples/app/client/xapp.coffee" />
-        <option value="$PROJECT_DIR$/xautocomplete.coffee" />
         <option value="$PROJECT_DIR$/examples/app/server/methods.coffee" />
-        <option value="$PROJECT_DIR$/examples/app/tests/jasmine/client/integration/xautocompleteSpec.coffee" />
+        <option value="$PROJECT_DIR$/xautocomplete.html" />
         <option value="$PROJECT_DIR$/examples/app/client/index.html" />
+        <option value="$PROJECT_DIR$/xautocomplete.coffee" />
+        <option value="$PROJECT_DIR$/examples/app/tests/jasmine/client/integration/xautocompleteSpec.coffee" />
       </list>
     </option>
   </component>
@@ -135,6 +135,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -239,7 +240,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -689,30 +689,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/examples/app/client/router.coffee">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.31079137" vertical-offset="0" max-vertical-offset="695">
+        <state vertical-scroll-proportion="0.30294532" vertical-offset="0" max-vertical-offset="713">
           <caret line="12" column="0" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples/app/client/xapp.coffee">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.05179856" vertical-offset="0" max-vertical-offset="695">
-          <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples/app/lib/collections.coffee">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.025245441" vertical-offset="0" max-vertical-offset="713">
-          <caret line="1" column="8" selection-start-line="1" selection-start-column="8" selection-end-line="1" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/xautocomplete.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.026745914" vertical-offset="0" max-vertical-offset="673">
-          <caret line="1" column="126" selection-start-line="1" selection-start-column="126" selection-end-line="1" selection-end-column="126" />
           <folding />
         </state>
       </provider>
@@ -725,26 +703,50 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/xautocomplete.coffee">
+    <entry file="file://$PROJECT_DIR$/examples/app/lib/collections.coffee">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="3473" max-vertical-offset="4212">
-          <caret line="208" column="50" selection-start-line="208" selection-start-column="50" selection-end-line="208" selection-end-column="50" />
+        <state vertical-scroll-proportion="0.025245441" vertical-offset="0" max-vertical-offset="713">
+          <caret line="1" column="8" selection-start-line="1" selection-start-column="8" selection-end-line="1" selection-end-column="8" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/examples/app/tests/jasmine/client/integration/xautocompleteSpec.coffee">
+    <entry file="file://$PROJECT_DIR$/examples/app/client/xapp.coffee">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1278">
-          <caret line="60" column="4" selection-start-line="60" selection-start-column="4" selection-end-line="60" selection-end-column="4" />
+        <state vertical-scroll-proportion="0.050490882" vertical-offset="0" max-vertical-offset="713">
+          <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/examples/app/client/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.53491825" vertical-offset="0" max-vertical-offset="673">
-          <caret line="20" column="50" selection-start-line="20" selection-start-column="50" selection-end-line="20" selection-end-column="50" />
+        <state vertical-scroll-proportion="-20.592592" vertical-offset="128" max-vertical-offset="828">
+          <caret line="38" column="73" selection-start-line="38" selection-start-column="73" selection-end-line="38" selection-end-column="73" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/xautocomplete.coffee">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="3301" max-vertical-offset="4302">
+          <caret line="202" column="47" selection-start-line="202" selection-start-column="47" selection-end-line="202" selection-end-column="47" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/xautocomplete.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.6666667" vertical-offset="0" max-vertical-offset="396">
+          <caret line="1" column="204" selection-start-line="1" selection-start-column="204" selection-end-line="1" selection-end-column="204" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples/app/tests/jasmine/client/integration/xautocompleteSpec.coffee">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.64" vertical-offset="2378" max-vertical-offset="4032">
+          <caret line="157" column="39" selection-start-line="157" selection-start-column="39" selection-end-line="157" selection-end-column="39" />
           <folding />
         </state>
       </provider>

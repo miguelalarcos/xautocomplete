@@ -191,7 +191,6 @@ $.valHooks['xautocomplete'] =
       return item.value
 
   set : (el, value)->
-
     ismultiple = $(el).attr('xmultiple')
     path_ = path($(el).attr('formid'), $(el).attr('name'))
     reference = $(el).attr('reference')
@@ -202,7 +201,10 @@ $.valHooks['xautocomplete'] =
         collection = reference
         for val in value
           obj = window[collection].findOne(val)
-          data.insert({path: path_, value: valueFunction(obj), remote_id: val})
+          if not data.findOne({path:path_, remote_id: val})
+            data.insert({path: path_, value: window[valueFunction](obj), remote_id: val})
+          else
+            data.update({path:path_}, {$set: {value: window[valueFunction](obj), remote_id: val}})
       else
         for val in value
           if not data.findOne({path: path_, value: val})
@@ -213,7 +215,10 @@ $.valHooks['xautocomplete'] =
       if reference not in [undefined, 'false']
         collection = reference
         obj = window[collection].findOne(value)
-        data.insert({path: path_, value: valueFunction(obj), remote_id: value})
+        if not data.findOne({path:path_})
+          data.insert({path: path_, value: window[valueFunction](obj), remote_id: value})
+        else
+          data.update({path:path_}, {$set: {value: window[valueFunction](obj), remote_id: value}})
       else
         if not data.findOne({path: path_})
           data.insert({path: path_, value: value})
