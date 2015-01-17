@@ -79,7 +79,7 @@ Template.xautocomplete.helpers
         for item, i in result
           rendered = window[renderFunction] item
           value = window[valueFunction](item)
-          items.insert({value: value, content:rendered, index: i, remote_id: item._id})#, doc: item})
+          items.insert({value: value, content:rendered, index: i, remote_id: item._id, doc: item})
       items.find({})
     else
       null
@@ -103,6 +103,8 @@ Template.xautocomplete.events
     query.set('')
     index = -1
     $(t.find '.xautocomplete-input').val('')
+    if atts.callbackfunction
+      window[atts.callbackfunction](selected)
 
   'keyup .xautocomplete-input': (e,t)->
     if e.keyCode == 38
@@ -131,6 +133,8 @@ Template.xautocomplete.events
         query.set('')
         index = -1
         $(t.find '.xautocomplete-input').val('')
+        if atts.callbackfunction
+          window[atts.callbackfunction](selected)
 
     else if e.keyCode == 27
       items.remove({})
