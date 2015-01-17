@@ -1,7 +1,7 @@
 Package.describe({
   name: 'miguelalarcos:xautocomplete',
   summary: 'An autocomplete widget. Values can be strings, array of strings or reference _ids.',
-  version: '0.1.0',
+  version: '0.1.1',
   git: 'https://github.com/miguelalarcos/xautocomplete.git'
 });
 

@@ -1,6 +1,6 @@
-query = @query
-items = @items
-data = @data
+query = @_testing.query
+items = @_testing.items
+data = @_testing.data
 
 result = [{_id:'0', name: 'Richard', surname:'Dawkins'},
   {_id: '1', name: 'Daniel', surname:'Dennet'},

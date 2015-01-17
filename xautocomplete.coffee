@@ -1,11 +1,12 @@
+@_testing = {}
 # query is Reactive var where we are going to keep the text that the user is writing in the current autocomplete input
-@query = query = new ReactiveVar('')
+@_testing.query = query = new ReactiveVar('')
 
 # we are going to keep the items to show in the popover as the user is writing in the autocomplete input
-@items = items = new Meteor.Collection null
+@_testing.items = items = new Meteor.Collection null
 
 # in data we keep the values of the all autocomplete inputs
-@data = data = new Meteor.Collection null
+@_testing.data = data = new Meteor.Collection null
 
 # index is the index in the popover where the user click
 index = -1
