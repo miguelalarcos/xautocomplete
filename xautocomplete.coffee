@@ -78,7 +78,7 @@ Template.xautocomplete.helpers
       Meteor.call call, query_, (error, result)->
         items.remove({})
         for item, i in result
-          rendered = window[renderFunction] item
+          rendered = window[renderFunction](item, query_)
           value = window[valueFunction](item)
           items.insert({value: value, content:rendered, index: i, remote_id: item._id, doc: item})
       items.find({})

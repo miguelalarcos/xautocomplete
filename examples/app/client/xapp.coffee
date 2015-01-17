@@ -1,4 +1,7 @@
-@renderAuthors = (x) -> Blaze.toHTMLWithData(Template.authors, x)
+@renderAuthors = (x, query) ->
+  txt = '<td>' +x.name + ' ' + x.surname+ '</td>'
+  txt.replace(query, "<b>$&</b>")
+  #Blaze.toHTMLWithData(Template.authors, x)
 @valueAuthor = (x) -> x.surname + ', ' + x.name
 @myCallback = (x) -> console.log x.doc
 
