@@ -18,6 +18,13 @@ current_input = null
 # each autocomplete input is identified by the formid and name
 path = (formid, name) -> formid + ':' + name
 
+generalValueFunction = (key)->
+  (x)-> x[key]
+
+generalRenderFunction = (key)->
+  (x, query)->
+    txt = '<td>' +x[key]+ '</td>'
+    txt.replace(query, "<b>$&</b>")
 
 Template.xautocomplete.helpers
   # this function setup the widget
@@ -29,7 +36,7 @@ Template.xautocomplete.helpers
     #if we come from autoform, the value come in this.value. Else in the object passed
 
     value = this.value or obj[atts.name]
-    valueFunction = atts.valuefunction
+    valueFunction = window[atts.valuefunction] or generalValueFunction(atts.valuekey)
 
     if atts.xmultiple == 'true'
       if value is undefined then value = []
@@ -37,14 +44,14 @@ Template.xautocomplete.helpers
         if atts.reference not in [undefined, 'false']
           collection = atts.reference
           obj = (window[collection]).findOne(val)
-          data.insert({path: path_, value: window[valueFunction](obj), remote_id: val})
+          data.insert({path: path_, value: valueFunction(obj), remote_id: val})
         else
           data.insert({path: path_, value: val, remote_id: null})
     else
       if atts.reference not in [undefined, 'false']
         collection = atts.reference
         obj = (window[collection]).findOne(value)
-        data.insert({path: path_, value: window[valueFunction](obj), remote_id: value})
+        data.insert({path: path_, value: valueFunction(obj), remote_id: value})
       else
         data.insert({path: path_, value: value, remote_id: null})
 
@@ -72,14 +79,15 @@ Template.xautocomplete.helpers
     atts = this.atts or this
     call = atts.call
     renderFunction = atts.renderfunction
-    valueFunction = atts.valuefunction
+    valueFunction = window[atts.valuefunction] or generalValueFunction(atts.valuekey)
+    renderFunction = window[renderFunction] or generalRenderFunction(atts.renderkey)
 
     if path(atts.formid, atts.name) == current_input
       Meteor.call call, query_, (error, result)->
         items.remove({})
         for item, i in result
-          rendered = window[renderFunction](item, query_)
-          value = window[valueFunction](item)
+          rendered = renderFunction(item, query_)
+          value = valueFunction(item)
           items.insert({value: value, content:rendered, index: i, remote_id: item._id, doc: item})
       items.find({})
     else
@@ -199,7 +207,7 @@ $.valHooks['xautocomplete'] =
     ismultiple = $(el).attr('xmultiple')
     path_ = path($(el).attr('formid'), $(el).attr('name'))
     reference = $(el).attr('reference')
-    valueFunction = $(el).attr('valuefunction')
+    valueFunction = window[$(el).attr('valuefunction')] or generalValueFunction($(el).attr('valuekey'))
 
     if ismultiple == 'true'
       if reference not in [undefined, 'false']
@@ -207,9 +215,9 @@ $.valHooks['xautocomplete'] =
         for val in value
           obj = window[collection].findOne(val)
           if not data.findOne({path:path_, remote_id: val})
-            data.insert({path: path_, value: window[valueFunction](obj), remote_id: val})
+            data.insert({path: path_, value: valueFunction(obj), remote_id: val})
           else
-            data.update({path:path_}, {$set: {value: window[valueFunction](obj), remote_id: val}})
+            data.update({path:path_}, {$set: {value: valueFunction(obj), remote_id: val}})
       else
         for val in value
           if not data.findOne({path: path_, value: val})
@@ -221,9 +229,9 @@ $.valHooks['xautocomplete'] =
         collection = reference
         obj = window[collection].findOne(value)
         if not data.findOne({path:path_})
-          data.insert({path: path_, value: window[valueFunction](obj), remote_id: value})
+          data.insert({path: path_, value: valueFunction(obj), remote_id: value})
         else
-          data.update({path:path_}, {$set: {value: window[valueFunction](obj), remote_id: value}})
+          data.update({path:path_}, {$set: {value: valueFunction(obj), remote_id: value}})
       else
         if not data.findOne({path: path_})
           data.insert({path: path_, value: value})
