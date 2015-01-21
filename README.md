@@ -8,20 +8,40 @@ In the examples folder you have a working example and a battery of tests with ``
 Example:
 
 ```html
-{{#with this.data}}
-    Simple xautocomplete: {{> xautocomplete formid='1' name='surname' valuefunction='valueAuthor' renderfunction='renderAuthors' call='authors'}}
-<br>
-    Reference xautocomplete: {{> xautocomplete   reference='authors' formid='1' name='authorId' valuefunction='valueAuthor' renderfunction='renderAuthors' call='authors'}}
-<br>
-    Multiple xautocomplete: {{> xautocomplete xmultiple='true' formid='1' name='surnames' valuefunction='valueAuthor' renderfunction='renderAuthors' call='authors'}}
-<br>
-    Multiple reference xautocomplete: {{> xautocomplete  xmultiple='true' reference='authors' formid='1' name='authorsId' valuefunction='valueAuthor' renderfunction='renderAuthors' call='authors'}}
-<br>
-...
+<template name="hello">
+    {{#with this.data}}
+        Simple autocomplete: {{> xautocomplete formid='2' name='surname' settings='settings1'}}
+    <br>
+        Reference: {{> xautocomplete formid='3' name='authorId' settings='settings2'}}
+    <br>
+        Multiple: {{> xautocomplete xmultiple='true' formid='4' name='surnames' valuefunction='valueAuthor' renderfunction='renderAuthors' call='authors' callbackfunction="myCallback"}}
+    <br>
+        Multiple reference: {{> xautocomplete  xmultiple='true' reference='authors' formid='5' name='authorsId' valuefunction='valueAuthor' renderfunction='renderAuthors' call='authors'}}
+    <br>
+    <button id="button">click to log</button>
+    {{/with}}
+</template>
 {{/with}}
 ```
 
 The pair *formid* and *name* has to be unique in the whole app. The *name* attribute is the object attribute you are displaying.
+
+You can pass a *setting* attribute with a definition like this:
+```coffee
+@settings1 =
+  renderKey : 'surname'
+  valueKey : 'surname'
+  call : 'authors'
+  callbackFunction : myCallback
+
+@settings2 =
+  renderFunction: renderAuthors
+  reference : 'authors'
+  valueKey: 'surname'
+  call : 'authors'
+```
+
+The other way is passing all the attributes in the *html template*, what means to have lots of globals functions. Please, notice that if you pass, for example, the render function in the *html*, it is *renderfunction*, and if you are passing it in a *setting*, it is renderFunction.
 
 Let's see *valuefunction* and *renderfunction*:
 
@@ -44,12 +64,32 @@ The *renderfunction* can be more complex, like this:
   txt.replace(query, "<b>$&</b>")
 ```
 
-*valuefunction* is used to make the string that will be stored in the input. Normally it will be just the key that you are using to search items.
-*renderfunction* is used to render a template in the popover for each item you get from the search as you are typing.
+*valuefunction* is used to make the string that will be stored in the input. Normally it will be just the key that you are using to search items. In this case is better to use *valueKey*.
+*renderfunction* is used to render a template in the popover for each item you get from the search as you are typing. If you just set a *renderKey*, then a default render will happen.
 
-If you don't want to define a *valuefunction* or a *renderfunction*, you have the *valuekey* and *renderkey* to specify simply the object attribute to be used.
+There's a *callbackfunction* attribute that if defined, will be called after selecting an item.
 
-There's a *callbackfunction* attribute that if defined, will be called after selecting an item. When you are using the widget in reference mode, you have to specify the collection you are referencing: reference='authors'.
+When you are using the widget in reference mode, you have to specify the collection you are referencing: reference='authors'.
 When you are using the widget in multiple mode, you have to specify this way: xmultiple='true' (note the 'x', this is because *multiple* is a reserved word of *html*.)
-Last we have the *call* attribute, which is the Meteor method you are using to fetch items.
+And we have the *call* attribute, which is the Meteor method you are using to fetch items. An example can be:
 
+```coffee
+Meteor.methods
+  authors: (query)->
+    if query != ''
+      authors.find(surname: {$regex: '^.*'+query+'.*$'}).fetch()
+    else
+      []
+```
+
+Last, I recommend to use the package *publishComposite* and avoid publishing a full collection. Example:
+
+```coffee
+Meteor.publishComposite 'bookById', (_id)->
+  find: -> books.find _id: _id
+  children: [find: (book) ->
+               authors.find _id: book.authorId
+             find: (book) ->
+               authors.find({_id: {$in: book.authorsId}})
+            ]
+```
