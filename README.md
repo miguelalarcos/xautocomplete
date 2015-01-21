@@ -1,7 +1,9 @@
 xautocomplete
 =============
 
-An autocomplete widget. This package is used by [afwrap-xautocomplete](https://github.com/miguelalarcos/afwrap-xautocomplete).
+An autocomplete widget.
+
+This package is used by [afwrap-xautocomplete](https://github.com/miguelalarcos/afwrap-xautocomplete).
 
 In the examples folder you have a working example and a battery of tests with ```Jasmine```.
 
