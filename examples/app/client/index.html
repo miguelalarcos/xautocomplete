@@ -1,10 +1,10 @@
 <template name="hello">
     {{#with this.data}}
-        Simple autocomplete: {{> xautocomplete formid='2' name='surname' renderkey='surname' call='authors' callbackfunction='myCallback'}}
+        Simple autocomplete: {{> xautocomplete formid='2' name='surname' settings='settings1'}}
     <br>
-        Reference: {{> xautocomplete   reference='authors' formid='3' name='authorId' valuekey='surname' renderfunction='renderAuthors' call='authors'}}
+        Reference: {{> xautocomplete formid='3' name='authorId' settings='settings2'}}
     <br>
-        Multiple: {{> xautocomplete xmultiple='true' formid='4' name='surnames' renderfunction='renderAuthors' call='authors'}}
+        Multiple: {{> xautocomplete xmultiple='true' formid='4' name='surnames' valuefunction='valueAuthor' renderfunction='renderAuthors' call='authors' callbackfunction="myCallback"}}
     <br>
         Multiple reference: {{> xautocomplete  xmultiple='true' reference='authors' formid='5' name='authorsId' valuefunction='valueAuthor' renderfunction='renderAuthors' call='authors'}}
     <br>

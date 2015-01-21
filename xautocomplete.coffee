@@ -36,7 +36,12 @@ Template.xautocomplete.helpers
     #if we come from autoform, the value come in this.value. Else in the object passed
 
     value = this.value or obj[atts.name]
-    valueFunction = window[atts.valuefunction] or generalValueFunction(atts.valuekey)
+    settings = window[atts.settings]
+    if settings
+      valueFunction = settings.valueFunction or generalValueFunction(settings.valueKey)
+      atts.reference = settings.reference
+    else
+      valueFunction = window[atts.valuefunction] or generalValueFunction(atts.valuekey)
 
     if atts.xmultiple == 'true'
       if value is undefined then value = []
@@ -77,10 +82,16 @@ Template.xautocomplete.helpers
   items: ->
     query_ = query.get()
     atts = this.atts or this
-    call = atts.call
-    renderFunction = atts.renderfunction
-    valueFunction = window[atts.valuefunction] or generalValueFunction(atts.valuekey)
-    renderFunction = window[renderFunction] or generalRenderFunction(atts.renderkey)
+
+    settings = window[atts.settings]
+    if settings
+      call = settings.call
+      valueFunction = settings.valueFunction or generalValueFunction(settings.valueKey)
+      renderFunction = settings.renderFunction or generalRenderFunction(settings.renderKey)
+    else
+      call = atts.call
+      valueFunction = window[atts.valuefunction] or generalValueFunction(atts.valuekey)
+      renderFunction = window[atts.renderfunction] or generalRenderFunction(atts.renderkey)
 
     if path(atts.formid, atts.name) == current_input
       Meteor.call call, query_, (error, result)->
@@ -114,6 +125,9 @@ Template.xautocomplete.events
     $(t.find '.xautocomplete-input').val('')
     if atts.callbackfunction
       window[atts.callbackfunction](selected)
+    else if atts.settings and window[atts.settings].callbackFunction
+      window[atts.settings].callbackFunction(selected)
+
 
   'keyup .xautocomplete-input': (e,t)->
     if e.keyCode == 38
@@ -144,6 +158,8 @@ Template.xautocomplete.events
         $(t.find '.xautocomplete-input').val('')
         if atts.callbackfunction
           window[atts.callbackfunction](selected)
+        else if atts.settings and window[atts.settings].callbackFunction
+          window[atts.settings].callbackFunction(selected)
 
     else if e.keyCode == 27
       items.remove({})
@@ -206,8 +222,13 @@ $.valHooks['xautocomplete'] =
   set : (el, value)->
     ismultiple = $(el).attr('xmultiple')
     path_ = path($(el).attr('formid'), $(el).attr('name'))
-    reference = $(el).attr('reference')
-    valueFunction = window[$(el).attr('valuefunction')] or generalValueFunction($(el).attr('valuekey'))
+    settings = window[$(el).attr('settings')]
+    if settings
+      reference = settings.reference
+      valueFunction = settings.valueFunction or generalValueFunction(settings.valueKey)
+    else
+      reference = $(el).attr('reference')
+      valueFunction = window[$(el).attr('valuefunction')] or generalValueFunction($(el).attr('valuekey'))
 
     if ismultiple == 'true'
       if reference not in [undefined, 'false']
