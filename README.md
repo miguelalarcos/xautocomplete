@@ -1,11 +1,11 @@
 xautocomplete
 =============
 
-An autocomplete widget.
-
+An autocomplete widget. Values can be strings, array of strings or reference _ids.
 This package is used by [afwrap-xautocomplete](https://github.com/miguelalarcos/afwrap-xautocomplete).
 
-In the examples folder you have a working example and a battery of tests with ```Jasmine```.
+Explanation
+-----------
 
 Example:
 
@@ -95,3 +95,5 @@ Meteor.publishComposite 'bookById', (_id)->
                authors.find({_id: {$in: book.authorsId}})
             ]
 ```
+
+In the examples folder you have a working example and a battery of tests with ```Jasmine```.
