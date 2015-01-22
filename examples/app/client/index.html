@@ -22,15 +22,33 @@
     {{/with}}
 </template>
 
+<template name="testing_settings">
+    {{#with this.data}}
+        {{> xautocomplete formid='1' name='surname' settings='settings1'}}
+    {{/with}}
+</template>
+
 <template name="testing_reference">
     {{#with this.data}}
         {{> xautocomplete formid='1' name='authorId' reference='authors' valuefunction='valueAuthor' renderfunction='renderAuthors' call='authors'}}
     {{/with}}
 </template>
 
+<template name="testing_reference_settings">
+    {{#with this.data}}
+        {{> xautocomplete formid='1' name='authorId' settings='settings2'}}
+    {{/with}}
+</template>
+
 <template name="testing_multiple">
     {{#with this.data}}
         {{> xautocomplete xmultiple='true' formid='1' name='surnames' valuefunction='valueAuthor' renderfunction='renderAuthors' call='authors'}}
+    {{/with}}
+</template>
+
+<template name="testing_multiple_settings">
+    {{#with this.data}}
+        {{> xautocomplete formid='1' name='surnames' settings='settings3'}}
     {{/with}}
 </template>
 

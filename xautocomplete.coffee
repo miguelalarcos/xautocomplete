@@ -7,7 +7,7 @@
 
 # in data we keep the values of the all autocomplete inputs
 @_testing.data = data = new Meteor.Collection null
-
+@data = data
 # index is the index in the popover where the user click
 index = -1
 
@@ -40,10 +40,12 @@ Template.xautocomplete.helpers
     if settings
       valueFunction = settings.valueFunction or generalValueFunction(settings.valueKey)
       atts.reference = settings.reference
+      xmultiple = settings.xmultiple
     else
       valueFunction = window[atts.valuefunction] or generalValueFunction(atts.valuekey)
+      xmultiple = atts.xmultiple
 
-    if atts.xmultiple == 'true'
+    if xmultiple == 'true'
       if value is undefined then value = []
       for val in value
         if atts.reference not in [undefined, 'false']
@@ -65,7 +67,11 @@ Template.xautocomplete.helpers
   # this is reactive based on data collection and formid and name
   value: ->
     atts = this.atts or this
-    if atts.xmultiple == 'true'
+    if atts.settings
+      multiple = window[atts.settings].xmultiple
+    else
+      multiple = atts.xmultiple
+    if multiple == 'true'
       return null
     item = data.findOne(path: path(atts.formid, atts.name))
     if item then item.value else null
@@ -73,7 +79,11 @@ Template.xautocomplete.helpers
   # this is reactive based on data collection and formid and name
   xmultiple: ->
     atts = this.atts or this
-    if atts.xmultiple == 'true'
+    if atts.settings
+      multiple = window[atts.settings].xmultiple
+    else
+      multiple = atts.xmultiple
+    if multiple == 'true'
       data.find({path: path(atts.formid, atts.name)})
     else
       null
@@ -113,7 +123,11 @@ Template.xautocomplete.events
     atts = t.data.atts or t.data
     path_ = path(atts['formid'], atts['name'])
     selected = items.findOne({selected: 'xselected'})
-    if atts.xmultiple == 'true'
+    if atts.settings
+      multiple = window[atts.settings].xmultiple
+    else
+      multiple = atts.xmultiple
+    if multiple == 'true'
       if not data.findOne({path: path_, value: selected.value})
         data.insert({path: path_, value: selected.value, remote_id: selected.remote_id})
     else
@@ -144,8 +158,11 @@ Template.xautocomplete.events
       if selected
         atts = t.data.atts or t.data
         path_ = path(atts.formid, atts.name)
-
-        if atts.xmultiple == 'true'
+        if atts.settings
+          multiple = window[atts.settings].xmultiple
+        else
+          multiple = atts.xmultiple
+        if multiple == 'true'
           if not data.findOne({path: path_, value: selected.value})
             data.insert({path: path_, value: selected.value, remote_id: selected.remote_id})
         else
@@ -172,8 +189,11 @@ Template.xautocomplete.events
 
       query.set(val)
       current_input = path_
-
-      if atts.xmultiple != 'true'
+      if atts.settings
+        multiple = window[atts.settings].xmultiple
+      else
+        multiple = atts.xmultiple
+      if multiple != 'true'
         item = items.findOne(value: val)
         if item then remote_id = item.remote_id else remote_id = null
         data.update({path: path_}, {$set: {value: val, remote_id: remote_id}})
@@ -201,34 +221,39 @@ Template.xautocomplete.events
 
 $.valHooks['xautocomplete'] =
   get : (el)->
-    ismultiple = $(el).attr('xmultiple')
     path_ = path($(el).attr('formid'), $(el).attr('name'))
 
+    settings = window[$(el).attr('settings')]
+    if settings
+      reference = settings.reference
+      ismultiple = settings.xmultiple
+    else
+      reference = $(el).attr('reference')
+      ismultiple = $(el).attr('xmultiple')
+
     if ismultiple == 'true'
-      if $(el).attr('reference') not in [undefined, 'false']
+      if reference not in [undefined, 'false']
         return (x.remote_id for x in data.find(path: path_).fetch())
       else
         return (x.value for x in data.find(path: path_).fetch())
     else
       item = data.findOne(path: path_)
-      if $(el).attr('reference') not in [undefined, 'false']
+      if reference not in [undefined, 'false']
         return item.remote_id
-
-      #if item.remote_id == null
-      #  return null
 
       return item.value
 
   set : (el, value)->
-    ismultiple = $(el).attr('xmultiple')
     path_ = path($(el).attr('formid'), $(el).attr('name'))
     settings = window[$(el).attr('settings')]
     if settings
       reference = settings.reference
       valueFunction = settings.valueFunction or generalValueFunction(settings.valueKey)
+      ismultiple = settings.xmultiple
     else
       reference = $(el).attr('reference')
       valueFunction = window[$(el).attr('valuefunction')] or generalValueFunction($(el).attr('valuekey'))
+      ismultiple = $(el).attr('xmultiple')
 
     if ismultiple == 'true'
       if reference not in [undefined, 'false']
@@ -249,6 +274,7 @@ $.valHooks['xautocomplete'] =
       if reference not in [undefined, 'false']
         collection = reference
         obj = window[collection].findOne(value)
+
         if not data.findOne({path:path_})
           data.insert({path: path_, value: valueFunction(obj), remote_id: value})
         else
