@@ -30,12 +30,17 @@ Template.xautocomplete.helpers
   # this function setup the widget
   init: (obj)-> #pensar en implementarlo con set, pues parece repetitivo
     # if we come from autoform, the attributes are in this.atts. Else in this directly
+
     atts = this.atts or this
     path_ = path(atts.formid, atts.name)
     data.remove(path: path_)
     #if we come from autoform, the value come in this.value. Else in the object passed
+    if this.value == '' or this.value
+      value = this.value
+    else
+      value = obj[atts.name]
+    #value = this.value or obj[atts.name]
 
-    value = this.value or obj[atts.name]
     settings = window[atts.settings]
     if settings
       valueFunction = settings.valueFunction or generalValueFunction(settings.valueKey)
@@ -46,7 +51,7 @@ Template.xautocomplete.helpers
       xmultiple = atts.xmultiple
 
     if xmultiple == 'true'
-      if value is undefined then value = []
+      if value is undefined or value == '' then value = []
       for val in value
         if atts.reference not in [undefined, 'false']
           collection = atts.reference
@@ -58,7 +63,12 @@ Template.xautocomplete.helpers
       if atts.reference not in [undefined, 'false']
         collection = atts.reference
         obj = (window[collection]).findOne(value)
-        data.insert({path: path_, value: valueFunction(obj), remote_id: value})
+        if obj
+          value_ = valueFunction(obj)
+        else
+          value_ = ''
+        #data.insert({path: path_, value: valueFunction(obj), remote_id: value})
+        data.insert({path: path_, value: value_, remote_id: value})
       else
         data.insert({path: path_, value: value, remote_id: null})
 
@@ -155,6 +165,7 @@ Template.xautocomplete.events
       items.update({index:index}, {$set:{selected: 'xselected'}})
     else if e.keyCode in [13, 39]
       selected = items.findOne({selected: 'xselected'}) or items.findOne({index: 0})
+
       if selected
         atts = t.data.atts or t.data
         path_ = path(atts.formid, atts.name)
@@ -162,6 +173,7 @@ Template.xautocomplete.events
           multiple = window[atts.settings].xmultiple
         else
           multiple = atts.xmultiple
+
         if multiple == 'true'
           if not data.findOne({path: path_, value: selected.value})
             data.insert({path: path_, value: selected.value, remote_id: selected.remote_id})
