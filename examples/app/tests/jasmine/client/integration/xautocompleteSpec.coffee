@@ -450,3 +450,47 @@ describe "multiple settings", ->
     v = $('[formid=1]').val()
     expect(v).toEqual(['Dawkins, Richard'])
 
+
+@settings4 = {xmultiple: 'true', reference: 'authors', valueFunction: valueAuthor, renderFunction: renderAuthors, call: 'authors'}
+describe " Settings multiple reference", ->
+  el= null
+
+  beforeEach ->
+    el = Blaze.renderWithData(Template.testing_multiple_reference_settings, {data: dataBook},$('body')[0])
+    Meteor.flush()
+
+  afterEach ->
+    Blaze.remove(el)
+
+  it "set and get", ->
+    $('[formid=1]').val(['0', '1'])
+    array = data.find(path:'1:authorsId').fetch()
+    surnames = (x.value for x in array)
+    expect(surnames).toEqual([ 'Dawkins, Richard', 'Dennet, Daniel'])
+    v = $('[formid=1]').val()
+    expect(v).toEqual(['0', '1'])
+
+  it "set, expect labels", ->
+    $('[formid=1]').val(['0', '1'])
+    expect($('[formid=1]>span.label').length).toBe(2)
+    span = $('[formid=1]>span.label')[0]
+    expect($(span).text()).toEqual('Dawkins, Richard ')
+    span = $('[formid=1]>span.label')[1]
+    expect($(span).text()).toEqual('Dennet, Daniel ')
+
+  it "query.set, right key, expect data and get", ->
+    event = jQuery.Event('keyup')
+    $('[formid=1]>.xautocomplete-input').trigger(event)
+    meteor_call = (call, query_, f) -> f(null, result)
+    spyOn(Meteor, 'call').and.callFake meteor_call
+
+    query.set('D')
+    Meteor.flush()
+    event = jQuery.Event('keyup', {keyCode: 39})
+    $('[formid=1]>.xautocomplete-input').trigger(event)
+
+    array = data.find(path:'1:authorsId').fetch()
+    surnames = (x.value for x in array)
+    expect(surnames).toEqual(['Dawkins, Richard'])
+    v = $('[formid=1]').val()
+    expect(v).toEqual(['0'])

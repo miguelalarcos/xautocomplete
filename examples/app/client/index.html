@@ -57,3 +57,9 @@
         {{> xautocomplete  xmultiple='true' reference='authors' formid='1' name='authorsId' valuefunction='valueAuthor' renderfunction='renderAuthors' call='authors'}}
     {{/with}}
 </template>
+
+<template name="testing_multiple_reference_settings">
+    {{#with this.data}}
+        {{> xautocomplete formid='1' name='authorsId' settings='settings4'}}
+    {{/with}}
+</template>
