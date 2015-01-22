@@ -228,8 +228,8 @@ describe "multiple reference", ->
     array = data.find(path:'1:authorsId').fetch()
     surnames = (x.value for x in array)
     expect(surnames).toEqual([ 'Dawkins, Richard', 'Dennet, Daniel'])
-    #v = $('[formid=1]').val()
-    #expect(v).toEqual(['0', '1'])
+    v = $('[formid=1]').val()
+    expect(v).toEqual(['0', '1'])
 
   it "set, expect labels", ->
     findOne = (_id)->
