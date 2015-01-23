@@ -182,10 +182,10 @@ describe "multiple", ->
 
   it "set and expect labels", ->
     $('[formid=1]').val(['XYZ', 'ABC'])
-    expect($('[formid=1]>span.label').length).toBe(2)
-    span = $('[formid=1]>span.label')[0]
+    expect($('[formid=1]>div>span.label').length).toBe(2)
+    span = $('[formid=1]>div>span.label')[0]
     expect($(span).text()).toEqual('XYZ ')
-    span = $('[formid=1]>span.label')[1]
+    span = $('[formid=1]>div>span.label')[1]
     expect($(span).text()).toEqual('ABC ')
 
   it "set, expect data and get", ->
@@ -240,10 +240,10 @@ describe "multiple reference", ->
 
     spyOn(authors, 'findOne').and.callFake findOne
     $('[formid=1]').val(['0', '1'])
-    expect($('[formid=1]>span.label').length).toBe(2)
-    span = $('[formid=1]>span.label')[0]
+    expect($('[formid=1]>div>span.label').length).toBe(2)
+    span = $('[formid=1]>div>span.label')[0]
     expect($(span).text()).toEqual('Dawkins, Richard ')
-    span = $('[formid=1]>span.label')[1]
+    span = $('[formid=1]>div>span.label')[1]
     expect($(span).text()).toEqual('Dennet, Daniel ')
 
   it "query.set, right key, expect data and get", ->
@@ -443,10 +443,10 @@ describe "multiple settings", ->
 
   it "set and expect labels", ->
     $('[formid=1]').val(['XYZ', 'ABC'])
-    expect($('[formid=1]>span.label').length).toBe(2)
-    span = $('[formid=1]>span.label')[0]
+    expect($('[formid=1]>div>span.label').length).toBe(2)
+    span = $('[formid=1]>div>span.label')[0]
     expect($(span).text()).toEqual('XYZ ')
-    span = $('[formid=1]>span.label')[1]
+    span = $('[formid=1]>div>span.label')[1]
     expect($(span).text()).toEqual('ABC ')
 
   it "set, expect data and get", ->
@@ -489,10 +489,10 @@ describe " Settings multiple reference", ->
 
   it "set, expect labels", ->
     $('[formid=1]').val(['0', '1'])
-    expect($('[formid=1]>span.label').length).toBe(2)
-    span = $('[formid=1]>span.label')[0]
+    expect($('[formid=1]>div>span.label').length).toBe(2)
+    span = $('[formid=1]>div>span.label')[0]
     expect($(span).text()).toEqual('Dawkins, Richard ')
-    span = $('[formid=1]>span.label')[1]
+    span = $('[formid=1]>div>span.label')[1]
     expect($(span).text()).toEqual('Dennet, Daniel ')
 
   it "query.set, right key, expect data and get", ->

@@ -6,9 +6,9 @@
 meteor-platform
 coffeescript
 nooitaf:semantic-ui
-miguelalarcos:xautocomplete
 reywood:publish-composite
 iron:router
 practicalmeteor:sinon
 velocity:html-reporter
 sanjo:jasmine
+miguelalarcos:xautocomplete

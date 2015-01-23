@@ -7,13 +7,12 @@
 
 # in data we keep the values of the all autocomplete inputs
 @_testing.data = data = new Meteor.Collection null
-@data = data
+
 # index is the index in the popover where the user click
 index = -1
 
 # the path of the current autocomplete input where the user is typing
 current_input = null
-#@current_input = current_input = {value: null}
 
 # each autocomplete input is identified by the formid and name
 path = (formid, name) -> formid + ':' + name

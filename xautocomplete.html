@@ -1,17 +1,18 @@
 <template name='xautocomplete'>
     <div class="xwidget xautocomplete ui input" tabindex=100 formid="{{this.formid}}" name="{{this.name}}" xmultiple="{{this.xmultiple}}" reference="{{this.reference}}" valuefunction="{{this.valuefunction}}" settings={{this.settings}} {{this.atts}}>
         {{init ..}}
-        <input type='text' class="xautocomplete-input" value="{{value}}">
-        <div class=xpopover tabindex=100>
-            <table class="ui table">
+        <input type='text' class="xautocomplete-input {{this.xinputclass}}" value="{{value}}">
+        <div class="xpopover" tabindex=100>
+            <table class="ui table {{this.xpopoverclass}}">
             {{#each items}}
                 <tr index={{this.index}} class="xitem {{this.selected}}">{{{this.content}}}</tr>
             {{/each}}
             </table>
         </div>
-        <br>
-        {{#each xmultiple}}
-            <span class="ui label">{{this.value}} <i value="{{this.value}}" class="delete icon xclose"></i></span>
-        {{/each}}
+        <div class="xmultiple {{this.xmultipleclass}}">
+            {{#each xmultiple}}
+                <span class="ui label">{{this.value}} <i value="{{this.value}}" class="delete icon xclose"></i></span>
+            {{/each}}
+        </div>
     </div>
 </template>
