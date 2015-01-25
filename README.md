@@ -84,12 +84,6 @@ Meteor.methods
       []
 ```
 
-There are other attributes related to css classes. They are: xinputclass, xpopoverclass, xmultipleclass. Example:
-
-```html
-{{> xautocomplete xinputclass='x100px' xpopoverclass="yellow" xmultipleclass="x100px" xmultiple='true' reference='authors' formid='5' name='authorsId' valuefunction='valueAuthor' renderfunction='renderAuthors' call='authors'}}
-```
-
 Last, I recommend to use the package *publishComposite* and avoid publishing a full collection. Example:
 
 ```coffee

@@ -1,0 +1,12 @@
+[formid='5'][name='authorsId'] .xautocomplete-input {
+    max-width: 200px;
+}
+
+[formid='5'][name='authorsId'] .xpopover-table {
+    background-color: lightyellow;
+    box-shadow: 10px 10px 5px #888888;
+}
+
+[formid='5'][name='authorsId'] .xmultiple {
+    max-width: 300px;
+}

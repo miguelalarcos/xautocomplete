@@ -82,7 +82,7 @@ Template.xautocomplete.helpers
           value_ = ''
         data.insert({path: path_, value: value_, remote_id: value})
       else
-        data.insert({path: path_, value: value, remote_id: null})
+        data.insert({path: path_, value: value, remote_id: null, return_value: value})
 
     null
 
@@ -143,7 +143,7 @@ Template.xautocomplete.events
       if not data.findOne({path: path_, value: selected.value})
         data.insert({path: path_, value: selected.value, remote_id: selected.remote_id})
     else
-      data.update({path: path_}, {$set: {value: selected.value, remote_id: selected.remote_id}})
+      data.update({path: path_}, {$set: {value: selected.value, remote_id: selected.remote_id, return_value: selected.value}})
 
     items.remove({})
     query.set('')
@@ -176,7 +176,7 @@ Template.xautocomplete.events
           if not data.findOne({path: path_, value: selected.value})
             data.insert({path: path_, value: selected.value, remote_id: selected.remote_id})
         else
-          data.update({path: path_}, {$set: {value: selected.value, remote_id: selected.remote_id}})
+          data.update({path: path_}, {$set: {value: selected.value, remote_id: selected.remote_id, return_value: selected.value}})
 
         # close popover
         items.remove({})
@@ -201,8 +201,11 @@ Template.xautocomplete.events
       multiple = atts.xmultiple
       if multiple != 'true'
         item = items.findOne(value: val)
-        if item then remote_id = item.remote_id else remote_id = null
-        data.update({path: path_}, {$set: {value: val, remote_id: remote_id}})
+        if item
+          data.update({path: path_}, {$set: {value: val, remote_id: item.remote_id, return_value: val}})
+        else
+          data.update({path: path_}, {$set: {value: val, remote_id: null, return_value: null}})
+
 
   'click .xclose':(e,t)->
     value = $(e.target).attr('value')
@@ -251,7 +254,7 @@ $.valHooks['xautocomplete'] =
       if reference not in [undefined, 'false']
         return item.remote_id
 
-      return item.value
+      return item.return_value
 
   set : (el, value)->
     atts = makeAtts(el)
@@ -293,7 +296,7 @@ $.valHooks['xautocomplete'] =
         if not data.findOne({path: path_})
           data.insert({path: path_, value: value})
         else
-          data.update({path: path_}, {$set:{value:value, remote_id: null}})
+          data.update({path: path_}, {$set:{value:value, remote_id: null, return_value:value}})
 
 
 $.fn.xautocomplete = ->

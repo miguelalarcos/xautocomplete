@@ -11,13 +11,13 @@ Template.hello.events
     for el in template.findAll('.xautocomplete')
       console.log $(el).val()
 
-@settings1 =
+@settings01 =
   renderKey : 'surname'
   valueKey : 'surname'
   call : 'authors'
   callbackFunction : myCallback
 
-@settings2 =
+@settings02 =
   renderFunction: renderAuthors
   reference : 'authors'
   valueKey: 'surname'

@@ -11,11 +11,3 @@
 .xclose{
     cursor: pointer;
 }
-
-.x100px {
-    max-width: 100px;
-}
-
-.yellow {
-    background-color: yellow !important;
-}

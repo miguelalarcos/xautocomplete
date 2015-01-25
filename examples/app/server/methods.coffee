@@ -6,7 +6,7 @@ books.remove({})
 authors.insert {_id:'0', name: 'Richard', surname:'Dawkins'}
 authors.insert {_id: '1', name: 'Daniel', surname:'Dennet'}
 authors.insert {_id: '2', name: 'Charles', surname:'Darwin'}
-books.insert {_id:'0', title:'The dangerous idea of Darwin', authorId: '1', surname:'Dennet, Daniel', authorsId:['0','1'], surnames: ['ABC', 'XYZ']}
+books.insert {_id:'0', title:'The dangerous idea of Darwin', authorId: '1', surname:'Dennet', authorsId:['0','1'], surnames: ['ABC', 'XYZ']}
 
 Meteor.methods
   authors: (query)->
