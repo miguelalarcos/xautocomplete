@@ -69,6 +69,23 @@ setValue = (atts, value) ->
     else
       data.insert({path: path_, value: value, remote_id: null, return_value: value})
 
+addValue = (atts, selected, t)->
+  path_ = path(atts['formid'], atts['name'])
+
+  multiple = atts.xmultiple
+  if multiple == 'true'
+    if not data.findOne({path: path_, value: selected.value})
+      data.insert({path: path_, value: selected.value, remote_id: selected.remote_id})
+  else
+    data.update({path: path_}, {$set: {value: selected.value, remote_id: selected.remote_id, return_value: selected.value}})
+
+  items.remove({})
+  query.set('')
+  index = -1
+  if multiple == 'true'
+    $(t.find '.xautocomplete-input').val('')
+  if atts.callbackfunction
+    atts.callbackfunction(selected)
 
 
 Template.xautocomplete.helpers
@@ -136,23 +153,8 @@ Template.xautocomplete.events
 
     atts = t.data.atts or t.data
     atts = extendAtts(atts)
-
-    path_ = path(atts['formid'], atts['name'])
     selected = items.findOne({selected: 'xselected'})
-    multiple = atts.xmultiple
-    if multiple == 'true'
-      if not data.findOne({path: path_, value: selected.value})
-        data.insert({path: path_, value: selected.value, remote_id: selected.remote_id})
-    else
-      data.update({path: path_}, {$set: {value: selected.value, remote_id: selected.remote_id, return_value: selected.value}})
-
-    items.remove({})
-    query.set('')
-    index = -1
-    $(t.find '.xautocomplete-input').val('')
-    if atts.callbackfunction
-      atts.callbackfunction(selected)
-
+    addValue(atts, selected, t)
 
   'keyup .xautocomplete-input': (e,t)->
     if e.keyCode == 38
@@ -166,27 +168,9 @@ Template.xautocomplete.events
       items.update({index:index}, {$set:{selected: 'xselected'}})
     else if e.keyCode in [13, 39]
       selected = items.findOne({selected: 'xselected'}) or items.findOne({index: 0})
-
-      if selected
-        atts = t.data.atts or t.data
-        atts = extendAtts(atts)
-        path_ = path(atts.formid, atts.name)
-        multiple = atts.xmultiple
-
-        if multiple == 'true'
-          if not data.findOne({path: path_, value: selected.value})
-            data.insert({path: path_, value: selected.value, remote_id: selected.remote_id})
-        else
-          data.update({path: path_}, {$set: {value: selected.value, remote_id: selected.remote_id, return_value: selected.value}})
-
-        # close popover
-        items.remove({})
-        query.set('')
-        index = -1
-        $(t.find '.xautocomplete-input').val('')
-        if atts.callbackfunction
-          atts.callbackfunction(selected)
-
+      atts = t.data.atts or t.data
+      atts = extendAtts(atts)
+      addValue(atts, selected, t)
     else if e.keyCode == 27
       items.remove({})
       query.set('')
