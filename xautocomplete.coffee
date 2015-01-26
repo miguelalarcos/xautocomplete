@@ -46,9 +46,9 @@ extendAtts = (atts) ->
   atts
 
 setValue = (atts, value) ->
+  if value is null then value = ''
   path_ = path(atts.formid, atts.name)
   data.remove(path: path_)
-
   valueFunction = atts.valuefunction or generalValueFunction(atts.valuekey)
   xmultiple = atts.xmultiple
 
@@ -65,7 +65,10 @@ setValue = (atts, value) ->
     if atts.reference not in [undefined, 'false']
       collection = atts.reference
       obj = collection.findOne({_id: value}, {reactive:false})
-      data.insert({path: path_, value: valueFunction(obj), remote_id: value})
+      if value == '' or value is undefined or value is null
+        data.insert({path: path_, value: '', remote_id: null})
+      else
+        data.insert({path: path_, value: valueFunction(obj), remote_id: value})
     else
       data.insert({path: path_, value: value, remote_id: null, return_value: value})
 
@@ -90,12 +93,12 @@ addValue = (atts, selected, t)->
 
 Template.xautocomplete.helpers
   # this function setup the widget
-  init: (obj)-> #pensar en implementarlo con set, pues parece repetitivo
-    # if we come from autoform, the attributes are in this.atts. Else in this directly
+  init: (obj)-> # if we come from autoform, the attributes are in this.atts. Else in this directly
 
     atts = this.atts or this
     atts = extendAtts(atts)
     #if we come from autoform, the value come in this.value. Else in the object passed
+
     if this.value == '' or this.value
       value = this.value
     else

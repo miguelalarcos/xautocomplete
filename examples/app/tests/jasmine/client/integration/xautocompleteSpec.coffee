@@ -7,12 +7,87 @@ result = [{_id:'0', name: 'Richard', surname:'Dawkins'},
   {_id: '1', name: 'Daniel', surname:'Dennet'},
   {_id: '2', name: 'Charles', surname:'Darwin'}]
 
-dataBook = {_id:'0', title:'The dangerous idea of Darwin', authorId: '1', surname:'Dennet, Daniel', authorsId:[], surnames: []}
+dataBook = {_id:'0', title:'The dangerous idea of Darwin', authorId: '1', surname:'Dennet', authorsId:[], surnames: []}
+
+describe 'test init', ->
+  it "test init simple surname null", ->
+    dataBook2 = {_id:'0', title:'a title', surname: null}
+    el = Blaze.renderWithData(Template.testing, dataBook2,$('body')[0])
+    Meteor.flush()
+    expect($('[formid=1].xwidget').val()).toBe('')
+    Blaze.remove(el)
+
+describe 'test init2', ->
+  it "test init simple authorId null", ->
+    spyOn(authors, 'findOne').and.returnValue({_id: '0', surname: 'Dawkins', name:'Richard'})
+    dataBook2 = {_id:'0', title:'a title', authorId: null}
+    el = Blaze.renderWithData(Template.testing_reference, dataBook2,$('body')[0])
+    Meteor.flush()
+    expect($('[formid=1].xwidget').val()).toBe(null)
+    Blaze.remove(el)
+
+describe 'test init3', ->
+  it "test init surnames null", ->
+    dataBook2 = {_id:'0', title:'a title', surnames: null}
+    el = Blaze.renderWithData(Template.testing_multiple, dataBook2,$('body')[0])
+    Meteor.flush()
+    expect($('[formid=1].xwidget').val()).toEqual([])
+    Blaze.remove(el)
+
+describe 'test init4', ->
+  it "test init simple authorsId null", ->
+    spyOn(authors, 'findOne').and.returnValue({_id: '0', surname: 'Dawkins', name:'Richard'})
+    dataBook2 = {_id:'0', title:'a title', authorsId: null}
+    el = Blaze.renderWithData(Template.testing_multiple_reference, dataBook2,$('body')[0])
+    Meteor.flush()
+    expect($('[formid=1].xwidget').val()).toEqual([])
+    Blaze.remove(el)
+
+describe 'test init5', ->
+  it "test init simple surname", ->
+    dataBook2 = {_id:'0', title:'a title', surname: 'Dennet'}
+    el = Blaze.renderWithData(Template.testing, dataBook2,$('body')[0])
+    Meteor.flush()
+    expect($('[formid=1].xwidget').val()).toBe('Dennet')
+    Blaze.remove(el)
+
+describe 'test init6', ->
+  it "test init simple authorId", ->
+    spyOn(authors, 'findOne').and.returnValue({_id: '0', surname: 'Dawkins', name:'Richard'})
+    dataBook2 = {_id:'0', title:'a title', authorId: '0'}
+    el = Blaze.renderWithData(Template.testing_reference, dataBook2,$('body')[0])
+    Meteor.flush()
+    expect($('[formid=1].xwidget').val()).toBe('0')
+    Blaze.remove(el)
+
+describe 'test init7', ->
+  it "test init surnames", ->
+    dataBook2 = {_id:'0', title:'a title', surnames: ['XYZ', 'ABC']}
+    el = Blaze.renderWithData(Template.testing_multiple, dataBook2,$('body')[0])
+    Meteor.flush()
+    expect($('[formid=1].xwidget').val()).toEqual(['XYZ', 'ABC'])
+    Blaze.remove(el)
+
+describe 'test init8', ->
+  it "test init simple authorsId", ->
+    findOne = (_id)->
+      if _id == '0'
+        {_id: '0', surname: 'Dawkins', name:'Richard'}
+      else
+        {_id:'1', surname: 'Dennet', name:'Daniel'}
+
+    spyOn(authors, 'findOne').and.callFake findOne
+
+    dataBook2 = {_id:'0', title:'a title', authorsId: ['0', '1']}
+    el = Blaze.renderWithData(Template.testing_multiple_reference, dataBook2,$('body')[0])
+    Meteor.flush()
+    expect($('[formid=1].xwidget').val()).toEqual(['0', '1'])
+    Blaze.remove(el)
 
 describe "simple", ->
   el= null
   beforeEach ->
-    el = Blaze.renderWithData(Template.testing, {data: dataBook},$('body')[0])
+    el = Blaze.renderWithData(Template.testing, dataBook,$('body')[0])
     Meteor.flush()
   afterEach ->
     Blaze.remove(el)
@@ -133,7 +208,7 @@ describe "simple reference", ->
   el= null
 
   beforeEach ->
-    el = Blaze.renderWithData(Template.testing_reference, {data: dataBook},$('body')[0])
+    el = Blaze.renderWithData(Template.testing_reference, dataBook,$('body')[0])
     Meteor.flush()
 
   afterEach ->
@@ -166,7 +241,7 @@ describe "multiple", ->
   el= null
 
   beforeEach ->
-    el = Blaze.renderWithData(Template.testing_multiple, {data: dataBook},$('body')[0])
+    el = Blaze.renderWithData(Template.testing_multiple, dataBook,$('body')[0])
     Meteor.flush()
 
   afterEach ->
@@ -210,7 +285,7 @@ describe "multiple reference", ->
   el= null
 
   beforeEach ->
-    el = Blaze.renderWithData(Template.testing_multiple_reference, {data: dataBook},$('body')[0])
+    el = Blaze.renderWithData(Template.testing_multiple_reference, dataBook,$('body')[0])
     Meteor.flush()
 
   afterEach ->
@@ -273,7 +348,7 @@ describe "Settings simple", ->
   el= null
   beforeEach ->
     #window.settings1 = {valueFunction: valueAuthor, renderFunction: renderAuthors, call: 'authors'}
-    el = Blaze.renderWithData(Template.testing_settings, {data: dataBook},$('body')[0])
+    el = Blaze.renderWithData(Template.testing_settings, dataBook,$('body')[0])
     Meteor.flush()
   afterEach ->
     Blaze.remove(el)
@@ -395,7 +470,7 @@ describe "Settings simple", ->
 describe "Settings simple reference", ->
   el= null
   beforeEach ->
-    el = Blaze.renderWithData(Template.testing_reference_settings, {data: dataBook},$('body')[0])
+    el = Blaze.renderWithData(Template.testing_reference_settings, dataBook,$('body')[0])
     Meteor.flush()
 
   afterEach ->
@@ -427,7 +502,7 @@ describe "multiple settings", ->
   el= null
 
   beforeEach ->
-    el = Blaze.renderWithData(Template.testing_multiple_settings, {data: dataBook},$('body')[0])
+    el = Blaze.renderWithData(Template.testing_multiple_settings, dataBook,$('body')[0])
     Meteor.flush()
 
   afterEach ->
@@ -473,7 +548,7 @@ describe " Settings multiple reference", ->
   el= null
 
   beforeEach ->
-    el = Blaze.renderWithData(Template.testing_multiple_reference_settings, {data: dataBook},$('body')[0])
+    el = Blaze.renderWithData(Template.testing_multiple_reference_settings, dataBook,$('body')[0])
     Meteor.flush()
 
   afterEach ->
