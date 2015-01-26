@@ -64,7 +64,7 @@ setValue = (atts, value) ->
   else
     if atts.reference not in [undefined, 'false']
       collection = atts.reference
-      obj = collection.findOne(value)
+      obj = collection.findOne({_id: value}, {reactive:false})
       data.insert({path: path_, value: valueFunction(obj), remote_id: value})
     else
       data.insert({path: path_, value: value, remote_id: null, return_value: value})
