@@ -84,6 +84,8 @@ Meteor.methods
       []
 ```
 
+When you are not using the xmultiple mode, $(xwidget).val() will return null if the value displayed is not an available option.
+
 Last, I recommend to use the package *publishComposite* and avoid publishing a full collection. Example:
 
 ```coffee
