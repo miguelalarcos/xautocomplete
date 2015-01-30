@@ -84,7 +84,7 @@ Meteor.methods
       []
 ```
 
-When you are not using the xmultiple mode, $(xwidget).val() will return null if the value displayed is not an available option.
+When you are using the simple mode (no multiple, no reference), you can use an extra attribute *strict*. If *strict* is true and the value displayed is not an available option, $(xwidget).val() will return null.
 
 Last, I recommend to use the package *publishComposite* and avoid publishing a full collection. Example:
 

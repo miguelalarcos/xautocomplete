@@ -218,7 +218,7 @@ Template.xautocomplete.events
 makeAtts = (el) ->
   el = $(el)
   atts = {}
-  for at in ['formid', 'name', 'settings', 'xmultiple', 'reference', 'valuefunction']
+  for at in ['strict', 'formid', 'name', 'settings', 'xmultiple', 'reference', 'valuefunction']
     atts[at] = el.attr(at)
   atts
 
@@ -240,8 +240,11 @@ $.valHooks['xautocomplete'] =
       item = data.findOne(path: path_)
       if reference not in [undefined, 'false']
         return item.remote_id
-
-      return item.return_value
+      else
+        if atts.strict == 'true'
+          return item.return_value
+        else
+          return item.value
 
   set : (el, value)->
     atts = makeAtts(el)
