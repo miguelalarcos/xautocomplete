@@ -132,7 +132,7 @@ describe "simple", ->
     Meteor.flush()
     event = jQuery.Event('keyup', {keyCode: 39})
     $('[formid=1]>.xautocomplete-input').trigger(event)
-    expect(data.findOne({path: '1:surname'}).value).toBe('Dawkins, Richard')
+    expect(data.findOne({path: '1:surname'}).value).toBe('Dawkins')
 
   it "query.set, down key, right key and expect data", ->
     event = jQuery.Event('keyup')
@@ -146,7 +146,7 @@ describe "simple", ->
     $('[formid=1]>.xautocomplete-input').trigger(event)
     event = jQuery.Event('keyup', {keyCode: 39})
     $('[formid=1]>.xautocomplete-input').trigger(event)
-    expect(data.findOne({path: '1:surname'}).value).toBe('Dawkins, Richard')
+    expect(data.findOne({path: '1:surname'}).value).toBe('Dawkins')
 
   it "query.set, several down key, one right key and expect data", ->
     event = jQuery.Event('keyup')
@@ -163,7 +163,7 @@ describe "simple", ->
     $('[formid=1]>.xautocomplete-input').trigger(event)
     event = jQuery.Event('keyup', {keyCode: 39})
     $('[formid=1]>.xautocomplete-input').trigger(event)
-    expect(data.findOne({path: '1:surname'}).value).toBe('Dawkins, Richard')
+    expect(data.findOne({path: '1:surname'}).value).toBe('Dawkins')
 
   it "esc means popover to close", ->
     #event = jQuery.Event('keyup')
@@ -190,7 +190,7 @@ describe "simple", ->
     event = jQuery.Event('click')
 
     $('[formid=1] tr[index=0].xitem').trigger(event)
-    expect(data.findOne({path: '1:surname'}).value).toBe('Dawkins, Richard')
+    expect(data.findOne({path: '1:surname'}).value).toBe('Dawkins')
     expect(items.find().fetch().length).toBe(0)
 
   it "data update means data goes to .xautocomplete-input", ->
@@ -218,7 +218,7 @@ describe "simple reference", ->
     spyOn(authors, 'findOne').and.returnValue({_id: '0', surname: 'Dawkins', name:'Richard'})
 
     $('[formid=1]').val('0')
-    expect(data.findOne(path:'1:authorId').value).toBe('Dawkins, Richard')
+    expect(data.findOne(path:'1:authorId').value).toBe('Dawkins')
     v = $('[formid=1]').val()
     expect(v).toBe('0')
 
@@ -232,7 +232,7 @@ describe "simple reference", ->
     Meteor.flush()
     event = jQuery.Event('keyup', {keyCode: 39})
     $('[formid=1]>.xautocomplete-input').trigger(event)
-    expect(data.findOne({path: '1:authorId'}).value).toBe('Dawkins, Richard')
+    expect(data.findOne({path: '1:authorId'}).value).toBe('Dawkins')
     v = $('[formid=1]').val()
     expect(v).toBe('0')
 
@@ -276,9 +276,9 @@ describe "multiple", ->
 
     array = data.find(path:'1:surnames').fetch()
     surnames = (x.value for x in array)
-    expect(surnames).toEqual(['Dawkins, Richard'])
+    expect(surnames).toEqual(['Dawkins'])
     v = $('[formid=1]').val()
-    expect(v).toEqual(['Dawkins, Richard'])
+    expect(v).toEqual(['Dawkins'])
 
 
 describe "multiple reference", ->
@@ -302,7 +302,7 @@ describe "multiple reference", ->
     $('[formid=1]').val(['0', '1'])
     array = data.find(path:'1:authorsId').fetch()
     surnames = (x.value for x in array)
-    expect(surnames).toEqual([ 'Dawkins, Richard', 'Dennet, Daniel'])
+    expect(surnames).toEqual([ 'Dawkins', 'Dennet'])
     v = $('[formid=1]').val()
     expect(v).toEqual(['0', '1'])
 
@@ -317,9 +317,9 @@ describe "multiple reference", ->
     $('[formid=1]').val(['0', '1'])
     expect($('[formid=1]>div>span.label').length).toBe(2)
     span = $('[formid=1]>div>span.label')[0]
-    expect($(span).text()).toEqual('Dawkins, Richard ')
+    expect($(span).text()).toEqual('Dawkins ')
     span = $('[formid=1]>div>span.label')[1]
-    expect($(span).text()).toEqual('Dennet, Daniel ')
+    expect($(span).text()).toEqual('Dennet ')
 
   it "query.set, right key, expect data and get", ->
     event = jQuery.Event('keyup')
@@ -334,20 +334,20 @@ describe "multiple reference", ->
 
     array = data.find(path:'1:authorsId').fetch()
     surnames = (x.value for x in array)
-    expect(surnames).toEqual(['Dawkins, Richard'])
+    expect(surnames).toEqual(['Dawkins'])
     v = $('[formid=1]').val()
     expect(v).toEqual(['0'])
 
 # WITH SETTINGS
 renderAuthors = (x, query) ->
   Blaze.toHTMLWithData(Template.authors, x)
-valueAuthor = (x) -> x.surname + ', ' + x.name
-@settings1 = {valueFunction: valueAuthor, renderFunction: renderAuthors, call: 'authors'}
+
+@settings1 = {fieldref:  'surname', renderFunction: renderAuthors, call: 'authors'}
 
 describe "Settings simple", ->
   el= null
   beforeEach ->
-    #window.settings1 = {valueFunction: valueAuthor, renderFunction: renderAuthors, call: 'authors'}
+    #window.settings1 = {fieldref: 'surname', renderFunction: renderAuthors, call: 'authors'}
     el = Blaze.renderWithData(Template.testing_settings, dataBook,$('body')[0])
     Meteor.flush()
   afterEach ->
@@ -393,7 +393,7 @@ describe "Settings simple", ->
     Meteor.flush()
     event = jQuery.Event('keyup', {keyCode: 39})
     $('[formid=1]>.xautocomplete-input').trigger(event)
-    expect(data.findOne({path: '1:surname'}).value).toBe('Dawkins, Richard')
+    expect(data.findOne({path: '1:surname'}).value).toBe('Dawkins')
 
   it "query.set, down key, right key and expect data", ->
     event = jQuery.Event('keyup')
@@ -407,7 +407,7 @@ describe "Settings simple", ->
     $('[formid=1]>.xautocomplete-input').trigger(event)
     event = jQuery.Event('keyup', {keyCode: 39})
     $('[formid=1]>.xautocomplete-input').trigger(event)
-    expect(data.findOne({path: '1:surname'}).value).toBe('Dawkins, Richard')
+    expect(data.findOne({path: '1:surname'}).value).toBe('Dawkins')
 
   it "query.set, several down key, one right key and expect data", ->
     event = jQuery.Event('keyup')
@@ -424,7 +424,7 @@ describe "Settings simple", ->
     $('[formid=1]>.xautocomplete-input').trigger(event)
     event = jQuery.Event('keyup', {keyCode: 39})
     $('[formid=1]>.xautocomplete-input').trigger(event)
-    expect(data.findOne({path: '1:surname'}).value).toBe('Dawkins, Richard')
+    expect(data.findOne({path: '1:surname'}).value).toBe('Dawkins')
 
   it "esc means popover to close", ->
     #event = jQuery.Event('keyup')
@@ -451,7 +451,7 @@ describe "Settings simple", ->
     event = jQuery.Event('click')
 
     $('[formid=1] tr[index=0].xitem').trigger(event)
-    expect(data.findOne({path: '1:surname'}).value).toBe('Dawkins, Richard')
+    expect(data.findOne({path: '1:surname'}).value).toBe('Dawkins')
     expect(items.find().fetch().length).toBe(0)
 
   it "data update means data goes to .xautocomplete-input", ->
@@ -466,7 +466,7 @@ describe "Settings simple", ->
     expect(v).toBe('miguel')
 
 
-@settings2 = {reference: 'authors', valueFunction: valueAuthor, renderFunction: renderAuthors, call: 'authors'}
+@settings2 = {reference: 'authors', fieldref: 'surname', renderFunction: renderAuthors, call: 'authors'}
 describe "Settings simple reference", ->
   el= null
   beforeEach ->
@@ -478,7 +478,7 @@ describe "Settings simple reference", ->
 
   it "test set and get", ->
     $('[formid=1]').val('0')
-    expect(data.findOne(path:'1:authorId').value).toBe('Dawkins, Richard')
+    expect(data.findOne(path:'1:authorId').value).toBe('Dawkins')
     v = $('[formid=1]').val()
     expect(v).toBe('0')
 
@@ -492,12 +492,12 @@ describe "Settings simple reference", ->
     Meteor.flush()
     event = jQuery.Event('keyup', {keyCode: 39})
     $('[formid=1]>.xautocomplete-input').trigger(event)
-    expect(data.findOne({path: '1:authorId'}).value).toBe('Dawkins, Richard')
+    expect(data.findOne({path: '1:authorId'}).value).toBe('Dawkins')
     v = $('[formid=1]').val()
     expect(v).toBe('0')
 
 
-@settings3 = {xmultiple: 'true', valueFunction: valueAuthor, renderFunction: renderAuthors, call: 'authors'}
+@settings3 = {xmultiple: true, fieldref: 'surname', renderFunction: renderAuthors, call: 'authors'}
 describe "multiple settings", ->
   el= null
 
@@ -538,12 +538,12 @@ describe "multiple settings", ->
     array = data.find(path:'1:surnames').fetch()
 
     surnames = (x.value for x in array)
-    expect(surnames).toEqual(['Dawkins, Richard'])
+    expect(surnames).toEqual(['Dawkins'])
     v = $('[formid=1]').val()
-    expect(v).toEqual(['Dawkins, Richard'])
+    expect(v).toEqual(['Dawkins'])
 
 
-@settings4 = {xmultiple: 'true', reference: 'authors', valueFunction: valueAuthor, renderFunction: renderAuthors, call: 'authors'}
+@settings4 = {xmultiple: true, reference: 'authors', fieldref: 'surname', renderFunction: renderAuthors, call: 'authors'}
 describe " Settings multiple reference", ->
   el= null
 
@@ -558,7 +558,7 @@ describe " Settings multiple reference", ->
     $('[formid=1]').val(['0', '1'])
     array = data.find(path:'1:authorsId').fetch()
     surnames = (x.value for x in array)
-    expect(surnames).toEqual([ 'Dawkins, Richard', 'Dennet, Daniel'])
+    expect(surnames).toEqual([ 'Dawkins', 'Dennet'])
     v = $('[formid=1]').val()
     expect(v).toEqual(['0', '1'])
 
@@ -566,9 +566,9 @@ describe " Settings multiple reference", ->
     $('[formid=1]').val(['0', '1'])
     expect($('[formid=1]>div>span.label').length).toBe(2)
     span = $('[formid=1]>div>span.label')[0]
-    expect($(span).text()).toEqual('Dawkins, Richard ')
+    expect($(span).text()).toEqual('Dawkins ')
     span = $('[formid=1]>div>span.label')[1]
-    expect($(span).text()).toEqual('Dennet, Daniel ')
+    expect($(span).text()).toEqual('Dennet ')
 
   it "query.set, right key, expect data and get", ->
     event = jQuery.Event('keyup')
@@ -583,6 +583,6 @@ describe " Settings multiple reference", ->
 
     array = data.find(path:'1:authorsId').fetch()
     surnames = (x.value for x in array)
-    expect(surnames).toEqual(['Dawkins, Richard'])
+    expect(surnames).toEqual(['Dawkins'])
     v = $('[formid=1]').val()
     expect(v).toEqual(['0'])

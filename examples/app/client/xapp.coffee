@@ -2,7 +2,7 @@
   #txt = '<td>' +x.name + ' ' + x.surname+ '</td>'
   #txt.replace(query, "<b>$&</b>")
   Blaze.toHTMLWithData(Template.authors, x)
-@valueAuthor = (x) -> x.surname + ', ' + x.name
+
 @myCallback = myCallback= (x) -> console.log x.doc
 
 Template.hello.events
@@ -13,12 +13,12 @@ Template.hello.events
 
 @settings01 =
   renderKey : 'surname'
-  valueKey : 'surname'
+  fieldRef: 'surname'
   call : 'authors'
   callbackFunction : myCallback
 
 @settings02 =
   renderFunction: renderAuthors
   reference : 'authors'
-  valueKey: 'surname'
+  fieldRef: 'surname'
   call : 'authors'

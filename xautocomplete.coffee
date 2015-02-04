@@ -30,7 +30,7 @@ extendAtts = (atts) ->
   if atts.settings
     #atts.valuefunction = window[atts.settings].valueFunction
     #atts.valuekey = window[atts.settings].valueKey
-    atts.xmultiple = window[atts.settings].fieldRef
+    atts.fieldref = window[atts.settings].fieldref
     atts.xmultiple = window[atts.settings].xmultiple
     atts.renderfunction = window[atts.settings].renderFunction
     atts.renderkey = window[atts.settings].renderKey
@@ -59,18 +59,19 @@ setValue = (atts, value) ->
       if atts.reference not in [undefined, false]
         collection = atts.reference
         obj = collection.findOne(val)
-        data.insert({path: path_, value: obj[atts.fieldRef], remote_id: val})
+        data.insert({path: path_, value: obj[atts.fieldref], remote_id: val})
       else
         data.insert({path: path_, value: val, remote_id: null})
   else
     if atts.reference not in [undefined, false]
       collection = atts.reference
       obj = collection.findOne({_id: value}, {reactive:false})
+
       if value == '' or value is undefined #or value is null
         data.insert({path: path_, value: '', remote_id: null})
       else
         if obj
-          data.insert({path: path_, value: obj[fieldRef], remote_id: value})
+          data.insert({path: path_, value: obj[atts.fieldref], remote_id: value})
     else
       data.insert({path: path_, value: value, remote_id: null, return_value: value})
 
@@ -144,7 +145,8 @@ Template.xautocomplete.helpers
         items.remove({})
         for item, i in result
           rendered = renderFunction(item, query_)
-          value = item[atts.fieldRef]
+          value = item[atts.fieldref]
+
           items.insert({value: value, content:rendered, index: i, remote_id: item._id, doc: item})
       items.find({})
     else
@@ -173,6 +175,7 @@ Template.xautocomplete.events
       items.update({index:index}, {$set:{selected: 'xselected'}})
     else if e.keyCode in [13, 39]
       selected = items.findOne({selected: 'xselected'}) or items.findOne({index: 0})
+
       atts = t.data.atts or t.data
       atts = extendAtts(atts)
       addValue(atts, selected, t)
@@ -220,8 +223,11 @@ Template.xautocomplete.events
 makeAtts = (el) ->
   el = $(el)
   atts = {}
-  for at in ['strict', 'formid', 'name', 'settings', 'xmultiple', 'reference']
-    atts[at] = el.attr(at)
+  for at in ['strict', 'formid', 'name', 'settings', 'xmultiple', 'reference', 'fieldref']
+    value = el.attr(at)
+    if at in ['xmultiple', 'strict']
+      value = Boolean(value)
+    atts[at] = value
   atts
 
 $.valHooks['xautocomplete'] =
