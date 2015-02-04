@@ -16,9 +16,9 @@ Example:
     <br>
         Reference: {{> xautocomplete formid='3' name='authorId' settings='settings2'}}
     <br>
-        Multiple: {{> xautocomplete xmultiple='true' formid='4' name='surnames' valuefunction='valueAuthor' renderfunction='renderAuthors' call='authors' callbackfunction="myCallback"}}
+        Multiple: {{> xautocomplete xmultiple='true' formid='4' name='surnames' fieldref='surname' renderfunction='renderAuthors' call='authors' callbackfunction="myCallback"}}
     <br>
-        Multiple reference: {{> xautocomplete  xmultiple='true' reference='authors' formid='5' name='authorsId' valuefunction='valueAuthor' renderfunction='renderAuthors' call='authors'}}
+        Multiple reference: {{> xautocomplete  xmultiple='true' reference='authors' formid='5' name='authorsId' fieldref='surname' renderfunction='renderAuthors' call='authors'}}
     <br>
     <button id="button">click to log</button>
     {{/with}}
@@ -32,24 +32,25 @@ You can pass a *setting* attribute with a definition like this:
 ```coffee
 @settings1 =
   renderKey : 'surname'
-  valueKey : 'surname'
+  fieldref : 'surname'
   call : 'authors'
   callbackFunction : myCallback
 
 @settings2 =
   renderFunction: renderAuthors
   reference : 'authors'
-  valueKey: 'surname'
+  fieldref: 'surname'
   call : 'authors'
 ```
 
 The other way is passing all the attributes in the *html template*, what means to have lots of globals functions. Please, notice that if you pass, for example, the render function in the *html*, it is *renderfunction*, and if you are passing it in a *setting*, it is renderFunction.
 
-Let's see *valuefunction* and *renderfunction*:
+*fieldref* is the field in the reference collection that you are using.
+
+Let's see *renderfunction*:
 
 ```coffee
 @renderAuthors = (x) -> Blaze.toHTMLWithData(Template.authors, x)
-@valueAuthor = (x) -> x.surname + ', ' + x.name
 ```
 
 ```html
@@ -66,7 +67,6 @@ The *renderfunction* can be more complex, like this:
   txt.replace(query, "<b>$&</b>")
 ```
 
-*valuefunction* is used to make the string that will be stored in the input. Normally it will be just the key that you are using to search items. In this case is better to use *valueKey*.
 *renderfunction* is used to render a template in the popover for each item you get from the search as you are typing. If you just set a *renderKey*, then a default render will happen.
 
 There's a *callbackfunction* attribute that if defined, will be called after selecting an item.
