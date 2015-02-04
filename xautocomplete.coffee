@@ -17,8 +17,8 @@ current_input = null
 # each autocomplete input is identified by the formid and name
 path = (formid, name) -> formid + ':' + name
 
-generalValueFunction = (key)->
-  (x)-> x[key]
+#generalValueFunction = (key)->
+#  (x)-> x[key]
 
 generalRenderFunction = (key)->
   (x, query)->
@@ -28,8 +28,9 @@ generalRenderFunction = (key)->
 extendAtts = (atts) ->
   atts = _.clone(atts)
   if atts.settings
-    atts.valuefunction = window[atts.settings].valueFunction
-    atts.valuekey = window[atts.settings].valueKey
+    #atts.valuefunction = window[atts.settings].valueFunction
+    #atts.valuekey = window[atts.settings].valueKey
+    atts.xmultiple = window[atts.settings].fieldRef
     atts.xmultiple = window[atts.settings].xmultiple
     atts.renderfunction = window[atts.settings].renderFunction
     atts.renderkey = window[atts.settings].renderKey
@@ -37,7 +38,7 @@ extendAtts = (atts) ->
     atts.call = window[atts.settings].call
     atts.callbackfunction = window[atts.settings].callbackFunction
   else
-    atts.valuefunction = window[atts.valuefunction]
+    #atts.valuefunction = window[atts.valuefunction]
     atts.renderfunction = window[atts.renderfunction]
     atts.reference = window[atts.reference]
     atts.callbackfunction = window[atts.callbackfunction]
@@ -49,7 +50,7 @@ setValue = (atts, value) ->
   if value is null then value = ''
   path_ = path(atts.formid, atts.name)
   data.remove(path: path_)
-  valueFunction = atts.valuefunction or generalValueFunction(atts.valuekey)
+  #valueFunction = atts.valuefunction or generalValueFunction(atts.valuekey)
   xmultiple = atts.xmultiple
 
   if xmultiple == 'true'
@@ -58,17 +59,18 @@ setValue = (atts, value) ->
       if atts.reference not in [undefined, 'false']
         collection = atts.reference
         obj = collection.findOne(val)
-        data.insert({path: path_, value: valueFunction(obj), remote_id: val})
+        data.insert({path: path_, value: obj[atts.fieldRef], remote_id: val})
       else
         data.insert({path: path_, value: val, remote_id: null})
   else
     if atts.reference not in [undefined, 'false']
       collection = atts.reference
       obj = collection.findOne({_id: value}, {reactive:false})
-      if value == '' or value is undefined or value is null
+      if value == '' or value is undefined #or value is null
         data.insert({path: path_, value: '', remote_id: null})
       else
-        data.insert({path: path_, value: valueFunction(obj), remote_id: value})
+        if obj
+          data.insert({path: path_, value: obj[fieldRef], remote_id: value})
     else
       data.insert({path: path_, value: value, remote_id: null, return_value: value})
 
@@ -134,7 +136,7 @@ Template.xautocomplete.helpers
     atts = extendAtts(atts)
 
     call = atts.call
-    valueFunction = atts.valuefunction or generalValueFunction(atts.valuekey)
+    #valueFunction = atts.valuefunction or generalValueFunction(atts.valuekey)
     renderFunction = atts.renderfunction or generalRenderFunction(atts.renderkey)
 
     if path(atts.formid, atts.name) == current_input
@@ -142,7 +144,7 @@ Template.xautocomplete.helpers
         items.remove({})
         for item, i in result
           rendered = renderFunction(item, query_)
-          value = valueFunction(item)
+          value = item[atts.fieldRef]
           items.insert({value: value, content:rendered, index: i, remote_id: item._id, doc: item})
       items.find({})
     else
@@ -218,7 +220,7 @@ Template.xautocomplete.events
 makeAtts = (el) ->
   el = $(el)
   atts = {}
-  for at in ['strict', 'formid', 'name', 'settings', 'xmultiple', 'reference', 'valuefunction']
+  for at in ['strict', 'formid', 'name', 'settings', 'xmultiple', 'reference']
     atts[at] = el.attr(at)
   atts
 
@@ -238,6 +240,8 @@ $.valHooks['xautocomplete'] =
         return (x.value for x in data.find(path: path_).fetch())
     else
       item = data.findOne(path: path_)
+      if not item
+        return null
       if reference not in [undefined, 'false']
         return item.remote_id
       else
