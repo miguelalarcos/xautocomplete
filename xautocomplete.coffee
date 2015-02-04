@@ -53,17 +53,17 @@ setValue = (atts, value) ->
   #valueFunction = atts.valuefunction or generalValueFunction(atts.valuekey)
   xmultiple = atts.xmultiple
 
-  if xmultiple == 'true'
+  if xmultiple == true
     if value is undefined or value == '' then value = []
     for val in value
-      if atts.reference not in [undefined, 'false']
+      if atts.reference not in [undefined, false]
         collection = atts.reference
         obj = collection.findOne(val)
         data.insert({path: path_, value: obj[atts.fieldRef], remote_id: val})
       else
         data.insert({path: path_, value: val, remote_id: null})
   else
-    if atts.reference not in [undefined, 'false']
+    if atts.reference not in [undefined, false]
       collection = atts.reference
       obj = collection.findOne({_id: value}, {reactive:false})
       if value == '' or value is undefined #or value is null
@@ -78,7 +78,7 @@ addValue = (atts, selected, t)->
   path_ = path(atts['formid'], atts['name'])
 
   multiple = atts.xmultiple
-  if multiple == 'true'
+  if multiple == true
     if not data.findOne({path: path_, value: selected.value})
       data.insert({path: path_, value: selected.value, remote_id: selected.remote_id})
   else
@@ -87,7 +87,7 @@ addValue = (atts, selected, t)->
   items.remove({})
   query.set('')
   index = -1
-  if multiple == 'true'
+  if multiple == true
     $(t.find '.xautocomplete-input').val('')
   if atts.callbackfunction
     atts.callbackfunction(selected)
@@ -114,7 +114,7 @@ Template.xautocomplete.helpers
     atts = this.atts or this
     atts = extendAtts(atts)
     multiple = atts.xmultiple
-    if multiple == 'true'
+    if multiple == true
       return null
     item = data.findOne(path: path(atts.formid, atts.name))
     if item then item.value else null
@@ -124,7 +124,7 @@ Template.xautocomplete.helpers
     atts = this.atts or this
     atts = extendAtts(atts)
     multiple = atts.xmultiple
-    if multiple == 'true'
+    if multiple == true
       data.find({path: path(atts.formid, atts.name)})
     else
       null
@@ -189,7 +189,7 @@ Template.xautocomplete.events
       query.set(val)
       current_input = path_
       multiple = atts.xmultiple
-      if multiple != 'true'
+      if multiple != true
         item = items.findOne(value: val)
         if item
           data.update({path: path_}, {$set: {value: val, remote_id: item.remote_id, return_value: val}})
@@ -233,8 +233,8 @@ $.valHooks['xautocomplete'] =
     reference = atts.reference
     ismultiple = atts.xmultiple
 
-    if ismultiple == 'true'
-      if reference not in [undefined, 'false']
+    if ismultiple == true
+      if reference not in [undefined, false]
         return (x.remote_id for x in data.find(path: path_).fetch())
       else
         return (x.value for x in data.find(path: path_).fetch())
@@ -242,10 +242,10 @@ $.valHooks['xautocomplete'] =
       item = data.findOne(path: path_)
       if not item
         return null
-      if reference not in [undefined, 'false']
+      if reference not in [undefined, false]
         return item.remote_id
       else
-        if atts.strict == 'true'
+        if atts.strict == true
           return item.return_value
         else
           return item.value
