@@ -13,12 +13,12 @@ Template.hello.events
 
 @settings01 =
   renderKey : 'surname'
-  fieldRef: 'surname'
+  fieldref: 'surname'
   call : 'authors'
   callbackFunction : myCallback
 
 @settings02 =
   renderFunction: renderAuthors
   reference : 'authors'
-  fieldRef: 'surname'
+  fieldref: 'surname'
   call : 'authors'

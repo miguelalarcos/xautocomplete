@@ -146,7 +146,6 @@ Template.xautocomplete.helpers
         for item, i in result
           rendered = renderFunction(item, query_)
           value = item[atts.fieldref]
-
           items.insert({value: value, content:rendered, index: i, remote_id: item._id, doc: item})
       items.find({})
     else
