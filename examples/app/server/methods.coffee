@@ -11,7 +11,7 @@ books.insert {_id:'0', title:'The dangerous idea of Darwin', authorId: '1', surn
 Meteor.methods
   authors: (query)->
     if query != ''
-      authors.find(surname: {$regex: '^.*'+query+'.*$'}).fetch()
+      authors.find(surname: {$regex: '^.*'+query+'.*$', $options: 'i'}).fetch()
     else
       []
 
